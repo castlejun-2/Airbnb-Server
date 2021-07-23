@@ -140,15 +140,6 @@ exports.patchUsers = async function (req, res) {
 };
 
 
-
-
-
-
-
-
-
-
-
 /** JWT 토큰 검증 API
  * [GET] /app/auto-login
  */
