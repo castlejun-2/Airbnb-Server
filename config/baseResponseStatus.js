@@ -16,6 +16,7 @@ module.exports = {
     SIGNUP_PASSWORD_LENGTH : { "isSuccess": false, "code": 2005, "message":"비밀번호는 6~20자리를 입력해주세요." },
     SIGNUP_NICKNAME_EMPTY : { "isSuccess": false, "code": 2006, "message":"닉네임을 입력 해주세요." },
     SIGNUP_NICKNAME_LENGTH : { "isSuccess": false,"code": 2007,"message":"닉네임은 최대 20자리를 입력해주세요." },
+    SINGUP_ROOMTYPE_EMPTY : { "isSuccess": false,"code":5015, "message":"방의 유형을 입력해주세요."},
 
     SIGNIN_EMAIL_EMPTY : { "isSuccess": false, "code": 2008, "message":"이메일을 입력해주세요" },
     SIGNIN_EMAIL_LENGTH : { "isSuccess": false, "code": 2009, "message":"이메일은 30자리 미만으로 입력해주세요." },
@@ -23,6 +24,12 @@ module.exports = {
     SIGNIN_PASSWORD_EMPTY : { "isSuccess": false, "code": 2011, "message": "비밀번호를 입력 해주세요." },
 
     USER_USERID_EMPTY : { "isSuccess": false, "code": 2012, "message": "userId를 입력해주세요." },
+    ROOM_HOSTID_EMPTY : { "isSuccess": false, "code": 5021, "message": "room의 hostId를 입력해주세요." },
+    ROOM_ROOMNAME_EMPTY : { "isSuccess": false, "code": 5016, "message": "방의 이름을 입력해주세요." },
+    ROOM_ROOMCOUNTRY_EMPTY : { "isSuccess": false, "code": 5017, "message": "방이 위치한 국가를 입력해주세요." },
+    ROOM_ROOMCITY_EMPTY : { "isSuccess": false, "code": 5018, "message": "방이 위치한 도시를 입력해주세요." },
+    ROOM_ROOMPRICE_EMPTY : { "isSuccess": false, "code": 5019, "message": "방이 가격을 입력해주세요." },
+    ROOM_ROOMGUESTNUMBER_EMPTY : { "isSuccess": false, "code": 5020, "message": "방의 최대 인원을 입력해주세요." },
     USER_USERID_NOT_EXIST : { "isSuccess": false, "code": 2013, "message": "해당 회원이 존재하지 않습니다." },
 
     USER_USEREMAIL_EMPTY : { "isSuccess": false, "code": 2014, "message": "이메일을 입력해주세요." },
