@@ -69,16 +69,34 @@ const {emit} = require("nodemon");
  */
 exports.getRooms = async function (req, res) {
     /**
-     * Query String: email
+     * Query String: roomName
      */
     const roomName = req.query.roomName;
     if (!roomName) {
-        // 유저 전체 조회
+        // 방 전체 조회
         const roomListResult = await roomProvider.retrieveRoomList();
         return res.send(response(baseResponse.SUCCESS, roomListResult));
     } else {
-        // 유저 검색 조회
+        // 방 검색 조회
         const roomListByEmail = await roomProvider.retrieveRoomList(roomName);
         return res.send(response(baseResponse.SUCCESS, roomListByEmail));
     }
+};
+
+/**
+ * API No. 3
+ * API Name : 특정 방 조회 API (+국가를 통한 조회)
+ * [GET] /app/rooms/{country}
+ */
+ exports.getRoomByCountry = async function (req, res) {
+
+    /**
+     * Path Variable: country
+     */
+    const country = req.params.country;
+
+    if (!country) return res.send(errResponse(baseResponse.SIGNUP_ROOM_NOT_REGISTER));
+
+    const roomByCountry = await roomProvider.retrieveRoom(country);
+    return res.send(response(baseResponse.SUCCESS, roomByCountry));
 };

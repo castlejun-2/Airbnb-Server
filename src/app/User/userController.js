@@ -6,6 +6,7 @@ const {response, errResponse} = require("../../../config/response");
 
 const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
+const { Console } = require("winston/lib/winston/transports");
 
 /**
  * API No. 0
@@ -24,29 +25,52 @@ exports.getTest = async function (req, res) {
 exports.postUsers = async function (req, res) {
 
     /**
-     * Body: email, password, nickname
+     * Body: userId, userImageUrl, passwd, nickName, firstName, lastName, address, phoneNumber, emailAddress, userType, gender, birtyday
      */
-    const {email, password, nickname} = req.body;
+    const {userId, userImageUrl, passwd, nickName, firstName, lastName, address, phoneNumber, emailAddress, gender, birthday} = req.body;
 
     // 빈 값 체크
-    if (!email)
-        return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
+    if (!userId)
+        return res.send(response(baseResponse.USER_USERID_EMPTY));
 
-    // 길이 체크
-    if (email.length > 30)
-        return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
+    // 비밀번호 길이 체크
+    if (passwd.length < 6 || passwd.length > 30)
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
 
     // 형식 체크 (by 정규표현식)
-    if (!regexEmail.test(email))
+    if (!regexEmail.test(emailAddress))
         return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
 
-    // 기타 등등 - 추가하기
+    // 빈 값 체크
+    if (!nickName)
+        return res.send(response(baseResponse.USER_NICKNAME_EMPTY));
 
+    // 빈 값 체크
+    if (!firstName)
+        return res.send(response(baseResponse.USER_FIRSTNAME_EMPTY));
+    
+    // 빈 값 체크
+    if (!lastName)
+        return res.send(response(baseResponse.USER_LASTNAME_EMPTY));
 
+    // 빈 값 체크
+    if (!address)
+        return res.send(response(baseResponse.USER_ADDRESS_EMPTY));
+        
+    // 빈 값 체크
+    if (!phoneNumber)
+        return res.send(response(baseResponse.USER_PHONENUMBER_EMPTY));
+        
+    // 빈 값 체크
+    if (!gender)
+        return res.send(response(baseResponse.USER_GENDER_EMPTY));
+
+    // 빈 값 체크
+    if (!birthday)
+        return res.send(response(baseResponse.USER_BIRTHDAY_EMPTY));    
+    
     const signUpResponse = await userService.createUser(
-        email,
-        password,
-        nickname
+        userId, userImageUrl, passwd, nickName, firstName, lastName, address, phoneNumber, emailAddress, gender, birthday
     );
 
     return res.send(signUpResponse);
@@ -62,15 +86,15 @@ exports.getUsers = async function (req, res) {
     /**
      * Query String: email
      */
-    const email = req.query.email;
+    const emailAddress = req.query.emailAddress;
 
-    if (!email) {
+    if (!emailAddress) {
         // 유저 전체 조회
         const userListResult = await userProvider.retrieveUserList();
         return res.send(response(baseResponse.SUCCESS, userListResult));
     } else {
         // 유저 검색 조회
-        const userListByEmail = await userProvider.retrieveUserList(email);
+        const userListByEmail = await userProvider.retrieveUserList(emailAddress);
         return res.send(response(baseResponse.SUCCESS, userListByEmail));
     }
 };
@@ -103,11 +127,16 @@ exports.getUserById = async function (req, res) {
  */
 exports.login = async function (req, res) {
 
-    const {email, password} = req.body;
+    const {userId, passwd} = req.body;
 
-    // TODO: email, password 형식적 Validation
-
-    const signInResponse = await userService.postSignIn(email, password);
+    // 빈 값 체크
+    if (!userId)
+        return res.send(response(baseResponse.USER_USERID_EMPTY));
+        
+    // 비밀번호 길이 체크
+    if (passwd.length < 6 || passwd.length > 30)
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH)); 
+    const signInResponse = await userService.postSignIn(userId, passwd);
 
     return res.send(signInResponse);
 };

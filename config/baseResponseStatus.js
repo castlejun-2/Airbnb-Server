@@ -24,6 +24,13 @@ module.exports = {
     SIGNIN_PASSWORD_EMPTY : { "isSuccess": false, "code": 2011, "message": "비밀번호를 입력 해주세요." },
 
     USER_USERID_EMPTY : { "isSuccess": false, "code": 2012, "message": "userId를 입력해주세요." },
+    USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 5022, "message": "nickname을 설정해주세요." },
+    USER_FIRSTNAME_EMPTY : { "isSuccess": false, "code": 5023, "message": "이름을 입력해주세요." },
+    USER_LASTNAME_EMPTY : { "isSuccess": false, "code": 5024, "message": "성을 입력해주세요." },
+    USER_ADDRESS_EMPTY : { "isSuccess": false, "code": 5025, "message": "주소를 입력해주세요." },
+    USER_PHONENUMBER_EMPTY : { "isSuccess": false, "code": 5026, "message": "핸드폰 번호를 입력해주세요." },
+    USER_GENDER_EMPTY : { "isSuccess": false, "code": 5027, "message": "성별을 입력해주세요." },
+    USER_BIRTHDAY_EMPTY : { "isSuccess": false, "code": 5028, "message": "생일을 입력해주세요." },
     ROOM_HOSTID_EMPTY : { "isSuccess": false, "code": 5021, "message": "room의 hostId를 입력해주세요." },
     ROOM_ROOMNAME_EMPTY : { "isSuccess": false, "code": 5016, "message": "방의 이름을 입력해주세요." },
     ROOM_ROOMCOUNTRY_EMPTY : { "isSuccess": false, "code": 5017, "message": "방이 위치한 국가를 입력해주세요." },
@@ -40,6 +47,8 @@ module.exports = {
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
 
     // Response error
+    SIGNUP_USER_NOT_REGISTER : { "isSuccess:": false, "code": 5029, "message":"존재하지 않는 회원입니다."},
+    SIGNUP_ROOM_NOT_REGISTER : { "isSuccess:": false, "code": 5030, "message":"유형에 맞는 방이 존재하지 않습니다."},
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
 

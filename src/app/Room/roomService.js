@@ -13,25 +13,25 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createRoom = async function (hostId, typeId, name, description, roomImageUrl, country, city, email, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber) {
+exports.createRoom = async function (hostId, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber) {
     try {
         // 이메일 중복 확인
-        const emailRows = await roomProvider.emailCheck(email);
+        const emailRows = await roomProvider.emailCheck(emailAddress);
         if (emailRows.length > 0)
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
 
-        const insertRoomInfoParams = [hostId, typeId, name, description, roomImageUrl, country, city, email, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber];
+        const insertRoomInfoParams = [hostId, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
         const roomIdResult = await roomDao.insertRoomInfo(connection, insertRoomInfoParams);
-        console.log(`추가된 회원 : ${roomIdResult[0].insertId}`)
+        console.log(`추가된 방 : ${roomIdResult[0].insertId}`)
         connection.release();
         return response(baseResponse.SUCCESS);
 
 
     } catch (err) {
-        logger.error(`App - createUser Service error\n: ${err.message}`);
+        logger.error(`App - createRoom Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 };
