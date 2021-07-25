@@ -43,12 +43,15 @@ module.exports = {
     USER_USEREMAIL_NOT_EXIST : { "isSuccess": false, "code": 2015, "message": "해당 이메일을 가진 회원이 존재하지 않습니다." },
     USER_ID_NOT_MATCH : { "isSuccess": false, "code": 2016, "message": "유저 아이디 값을 확인해주세요" },
     USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 2017, "message": "변경할 닉네임 값을 입력해주세요" },
-
+    USER_WISHLIST_EMPTY : { "isSuccess": false, "code": 5031, "message": "위시리스트 이름을 입력해주세요" },
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
 
     // Response error
     SIGNUP_USER_NOT_REGISTER : { "isSuccess:": false, "code": 5029, "message":"존재하지 않는 회원입니다."},
     SIGNUP_ROOM_NOT_REGISTER : { "isSuccess:": false, "code": 5030, "message":"유형에 맞는 방이 존재하지 않습니다."},
+    SIGNUP_ROOMNAME_EMPTY : { "isSuccess:": false, "code": 5034, "message":"방의 이름을 입력해주세요."},
+    SIGNUP_WISHLIST_NOT_REGISTER : { "isSuccess:": false, "code": 5032, "message":"위시리스트가 존재하지 않습니다."},
+    SIGNUP_LISTCONTENT_NOT_REGISTER : { "isSuccess:": false, "code": 5033, "message":"위시리스트 속 방이 존재하지 않습니다."},
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
 

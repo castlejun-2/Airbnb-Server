@@ -4,7 +4,7 @@ const response = ({isSuccess, code, message}, result) => {
         code: code,
         message: message,
         result: result
-   }
+    }
   };
 
   const errResponse = ({isSuccess, code, message}) => {

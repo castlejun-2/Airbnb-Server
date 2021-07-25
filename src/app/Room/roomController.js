@@ -9,7 +9,7 @@ const {emit} = require("nodemon");
 
 /**
  * API No. 1
- * API Name : 방 생성 (회원가입) API
+ * API Name : 숙소 생성 (회원가입) API
  * [POST] /app/rooms
  */
  exports.postRooms = async function (req, res) {
@@ -64,7 +64,7 @@ const {emit} = require("nodemon");
 
 /**
  * API No. 2
- * API Name : 방 정보 조회 API (+ 방 이름 검색 조회)
+ * API Name : 숙소 정보 조회 API (+ 방 이름 검색 조회)
  * [GET] /app/rooms
  */
 exports.getRooms = async function (req, res) {
@@ -85,7 +85,7 @@ exports.getRooms = async function (req, res) {
 
 /**
  * API No. 3
- * API Name : 특정 방 조회 API (+국가를 통한 조회)
+ * API Name : 특정 숙소 조회 API (+국가를 통한 조회)
  * [GET] /app/rooms/{country}
  */
  exports.getRoomByCountry = async function (req, res) {
@@ -95,8 +95,41 @@ exports.getRooms = async function (req, res) {
      */
     const country = req.params.country;
 
-    if (!country) return res.send(errResponse(baseResponse.SIGNUP_ROOM_NOT_REGISTER));
+    if (!country)
+        return res.send(errResponse(baseResponse.SIGNUP_ROOM_NOT_REGISTER));
 
     const roomByCountry = await roomProvider.retrieveRoom(country);
     return res.send(response(baseResponse.SUCCESS, roomByCountry));
 };
+
+/**
+ * API No. 4
+ * API Name : 숙소 규칙 조회 API (+국가를 통한 조회)
+ * [GET] /app/rooms/{country}
+ */
+exports.getRoomRules = async function (req, res) {
+
+    const roomName = req.params.roomName;
+
+    if (!roomName) 
+        return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
+    
+    const roomRules = await roomProvider.retrieveRoomRule(roomName);
+    return res.send(response(baseResponse.SUCCESS, roomRules));    
+}
+
+/**
+ * API No. 5
+ * API Name : 자신의 숙소 조회 API
+ * [GET] /app/rooms/:userId
+ */
+exports.getMyRoom = async function (req, res) {
+    
+    const userId = req.params.userId;
+    
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    const myRoom = await roomProvider.retrieveMyRoom(userId);
+    return res.send(response(baseResponse.SUCCESS, myRoom));
+}

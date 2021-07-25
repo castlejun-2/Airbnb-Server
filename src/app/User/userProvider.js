@@ -27,7 +27,7 @@ exports.retrieveUserList = async function (emailAddress) {
 exports.retrieveUser = async function (userId) {
   const connection = await pool.getConnection(async (conn) => conn);
   const userResult = await userDao.selectUserId(connection, userId);
-
+  
   connection.release();
 
   if(!userResult[0])
@@ -61,3 +61,11 @@ exports.accountCheck = async function (userId) {
 
   return userAccountResult;
 };
+
+exports.retrieveTravelHistory = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const userTravelHistoryResult = await userDao.selectUserTravelHistory(connection, userId);
+  connection.release();
+  
+  return userTravelHistoryResult;
+}

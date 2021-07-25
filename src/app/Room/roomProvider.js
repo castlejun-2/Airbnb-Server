@@ -35,6 +35,23 @@ exports.retrieveRoom = async function (country) {
      return roomResult;
 };
 
+exports.retrieveRoomRule = async function (roomName) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const rulesResult = await roomDao.selectRoomRule(connection, roomName);
+
+  connection.release();
+
+  return rulesResult[0];
+}
+
+exports.retrieveMyRoom = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const myRoomResult = await roomDao.selectMyRoom(connection, userId);
+  
+  connection.release();
+
+  return myRoomResult;
+}
 exports.emailCheck = async function (emailAddress) {
   const connection = await pool.getConnection(async (conn) => conn);
   const emailCheckResult = await roomDao.selectRoomEmail(connection, emailAddress);

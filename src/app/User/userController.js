@@ -14,8 +14,8 @@ const { Console } = require("winston/lib/winston/transports");
  * [GET] /app/test
  */
 exports.getTest = async function (req, res) {
-     return res.send(response(baseResponse.SUCCESS))
-}
+     return res.send(response(baseResponse.SUCCESS));
+};
 
 /**
  * API No. 1
@@ -82,7 +82,6 @@ exports.postUsers = async function (req, res) {
  * [GET] /app/users
  */
 exports.getUsers = async function (req, res) {
-
     /**
      * Query String: email
      */
@@ -105,13 +104,14 @@ exports.getUsers = async function (req, res) {
  * [GET] /app/users/{userId}
  */
 exports.getUserById = async function (req, res) {
-
+    
     /**
      * Path Variable: userId
      */
     const userId = req.params.userId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     const userByUserId = await userProvider.retrieveUser(userId);
     return res.send(response(baseResponse.SUCCESS, userByUserId));
@@ -123,19 +123,18 @@ exports.getUserById = async function (req, res) {
  * API No. 4
  * API Name : 로그인 API
  * [POST] /app/login
- * body : email, passsword
+ * body : userId, passsword
  */
 exports.login = async function (req, res) {
-
     const {userId, passwd} = req.body;
-
     // 빈 값 체크
     if (!userId)
         return res.send(response(baseResponse.USER_USERID_EMPTY));
-        
+
     // 비밀번호 길이 체크
     if (passwd.length < 6 || passwd.length > 30)
         return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH)); 
+    
     const signInResponse = await userService.postSignIn(userId, passwd);
 
     return res.send(signInResponse);
@@ -154,21 +153,54 @@ exports.patchUsers = async function (req, res) {
     // jwt - userId, path variable :userId
 
     const userIdFromJWT = req.verifiedToken.userId
-
     const userId = req.params.userId;
     const nickname = req.body.nickname;
 
-    if (userIdFromJWT != userId) {
+    if (userIdFromJWT != userId)
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    } else {
-        if (!nickname) return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
+    else {
+        if (!nickname)
+            return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
 
-        const editUserInfo = await userService.editUser(userId, nickname)
+        const editUserInfo = await userService.editUser(userId, nickname);
         return res.send(editUserInfo);
     }
 };
+/**
+ * API No. 6
+ * API Name : 회원 탈퇴 API
+ * [POST] /app/users/:userId/withdrawal
+ * path variable : userId
+ * body : listName
+ */
+ exports.deleteUsers = async function (req, res) {
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+
+    if (userIdFromJWT != userId)
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    else {
+        const deleteUserInfo = await userService.deleteUser(userId);
+        return res.send(deleteUserInfo);
+    }
+ }
 
 
+/**
+ * API No. 10
+ * API Name : 회원의 이전 여행 기록 및 여행 예정 조회 API
+ * [GET] /app/users/:userId/travel-Historys
+ * path variable : userId
+ */
+exports.getHistory = async function (req, res) {
+    const userId = req.params.userId;
+
+    if(!userId)
+       return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    const historyResult = await userProvider.retrieveTravelHistory(userId);
+    return res.send(historyResult);
+}
 /** JWT 토큰 검증 API
  * [GET] /app/auto-login
  */
