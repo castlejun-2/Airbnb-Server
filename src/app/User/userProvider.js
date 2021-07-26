@@ -61,11 +61,3 @@ exports.accountCheck = async function (userId) {
 
   return userAccountResult;
 };
-
-exports.retrieveTravelHistory = async function (userId) {
-  const connection = await pool.getConnection(async (conn) => conn);
-  const userTravelHistoryResult = await userDao.selectUserTravelHistory(connection, userId);
-  connection.release();
-  
-  return userTravelHistoryResult;
-}

@@ -18,7 +18,7 @@ exports.getTest = async function (req, res) {
 };
 
 /**
- * API No. 1
+ * API No. 12
  * API Name : 유저 생성 (회원가입) API
  * [POST] /app/users
  */
@@ -77,7 +77,7 @@ exports.postUsers = async function (req, res) {
 };
 
 /**
- * API No. 2
+ * API No. 13
  * API Name : 유저 조회 API (+ 이메일로 검색 조회)
  * [GET] /app/users
  */
@@ -99,7 +99,7 @@ exports.getUsers = async function (req, res) {
 };
 
 /**
- * API No. 3
+ * API No. 14
  * API Name : 특정 유저 조회 API
  * [GET] /app/users/{userId}
  */
@@ -120,7 +120,7 @@ exports.getUserById = async function (req, res) {
 
 // TODO: After 로그인 인증 방법 (JWT)
 /**
- * API No. 4
+ * API No. 15
  * API Name : 로그인 API
  * [POST] /app/login
  * body : userId, passsword
@@ -142,9 +142,9 @@ exports.login = async function (req, res) {
 
 
 /**
- * API No. 5
+ * API No. 16
  * API Name : 회원 정보 수정 API + JWT + Validation
- * [PATCH] /app/users/:userId
+ * [PATCH] /app/users/:userId/profile
  * path variable : userId
  * body : nickname
  */
@@ -167,11 +167,10 @@ exports.patchUsers = async function (req, res) {
     }
 };
 /**
- * API No. 6
+ * API No. 17
  * API Name : 회원 탈퇴 API
  * [POST] /app/users/:userId/withdrawal
  * path variable : userId
- * body : listName
  */
  exports.deleteUsers = async function (req, res) {
     const userIdFromJWT = req.verifiedToken.userId
@@ -185,22 +184,6 @@ exports.patchUsers = async function (req, res) {
     }
  }
 
-
-/**
- * API No. 10
- * API Name : 회원의 이전 여행 기록 및 여행 예정 조회 API
- * [GET] /app/users/:userId/travel-Historys
- * path variable : userId
- */
-exports.getHistory = async function (req, res) {
-    const userId = req.params.userId;
-
-    if(!userId)
-       return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
-
-    const historyResult = await userProvider.retrieveTravelHistory(userId);
-    return res.send(historyResult);
-}
 /** JWT 토큰 검증 API
  * [GET] /app/auto-login
  */

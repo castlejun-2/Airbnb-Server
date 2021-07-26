@@ -92,26 +92,6 @@ async function deleteUserInfo(connection, userId) {
   return deleteUserRow[0];
 }
 
-async function selectUserTravelHistory(connection, userId) {
-  const selectUserTravelHistoryQuery = `
-  select case
-			    when startDate > CURRENT_DATE
-			      then '예정된 여행'
-			      else '이전 여행지'
-	        end as 구분,
-	       ri.roomImageUrl as '숙소사진',
-	       ri.country as '나라',
-         ri.city as '도시',
-         ho.nickName as '숙소 Host',
-         ur.startDate as '시작일자',
-         ur.lastDate as '종료일자'
-        from UserInfo ui,UserReservation ur,RoomInfo ri,
-        (select ri.id,ui.nickName from UserInfo ui join RoomInfo ri on ui.id=ri.hostId) ho
-        where ur.guestId = ui.id and ui.id = ? and ur.roomId = ri.id and ri.id=ho.id; 
-  `;
-  const [selectUserTravelHistoryRow] = await connection.query(selectUserTravelHistoryQuery, userId);
-  return selectUserTravelHistoryRow;
-}
 module.exports = {
   selectUser,
   selectUserEmail,
@@ -120,6 +100,5 @@ module.exports = {
   selectUserPassword,
   selectUserAccount,
   updateUserInfo,
-  deleteUserInfo,
-  selectUserTravelHistory
+  deleteUserInfo
 };

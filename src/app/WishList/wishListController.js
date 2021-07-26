@@ -9,7 +9,7 @@ const {emit} = require("nodemon");
 const { Console } = require("winston/lib/winston/transports");
 
 /**
- * API No. 1
+ * API No. 18
  * API Name : 회원 위시리스트 추가 API
  * [POST] /app/users/:userId/add-WishLists
  * path variable : userId
@@ -27,7 +27,7 @@ const { Console } = require("winston/lib/winston/transports");
 }
 
 /**
- * API No. 2
+ * API No. 19
  * API Name : 회원 위시리스트 목록 조회 API
  * [GET] /app/users/:userId/WishLists
  * path variable : userId
@@ -43,10 +43,11 @@ exports.getWishList = async function (req, res) {
 }
 
 /**
- * API No. 3
+ * API No. 20
  * API Name : 회원 위시리스트 목록 속 방 조회 API
  * [GET] /app/:userId/WishListContents
  * path variable : userId
+ * parameter : listname
  */
 exports.getListContent = async function (req, res) {
     const userId = req.params.userId;

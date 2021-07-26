@@ -8,7 +8,7 @@ const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
 
 /**
- * API No. 1
+ * API No. 6
  * API Name : 숙소 생성 (회원가입) API
  * [POST] /app/rooms
  */
@@ -63,7 +63,7 @@ const {emit} = require("nodemon");
 };
 
 /**
- * API No. 2
+ * API No. 7
  * API Name : 숙소 정보 조회 API (+ 방 이름 검색 조회)
  * [GET] /app/rooms
  */
@@ -84,9 +84,9 @@ exports.getRooms = async function (req, res) {
 };
 
 /**
- * API No. 3
+ * API No. 8
  * API Name : 특정 숙소 조회 API (+국가를 통한 조회)
- * [GET] /app/rooms/{country}
+ * [GET] /app/rooms/:country
  */
  exports.getRoomByCountry = async function (req, res) {
 
@@ -103,12 +103,15 @@ exports.getRooms = async function (req, res) {
 };
 
 /**
- * API No. 4
+ * API No. 9
  * API Name : 숙소 규칙 조회 API (+국가를 통한 조회)
- * [GET] /app/rooms/{country}
+ * [GET] /app/roomrule/:roomName
  */
 exports.getRoomRules = async function (req, res) {
 
+    /**
+     * Path Variable: roomName
+     */
     const roomName = req.params.roomName;
 
     if (!roomName) 
@@ -119,9 +122,9 @@ exports.getRoomRules = async function (req, res) {
 }
 
 /**
- * API No. 5
- * API Name : 자신의 숙소 조회 API
- * [GET] /app/rooms/:userId
+ * API No. 10
+ * API Name : 자신이 등록한 숙소 조회 API
+ * [GET] /app/hostrooms/:userId
  */
 exports.getMyRoom = async function (req, res) {
     
@@ -133,3 +136,24 @@ exports.getMyRoom = async function (req, res) {
     const myRoom = await roomProvider.retrieveMyRoom(userId);
     return res.send(response(baseResponse.SUCCESS, myRoom));
 }
+
+/**
+ * API No. 11
+ * API Name : 숙소 상태 변경 API
+ * [PATCH] /app/rooms/:roomName/withdrawal
+ */
+exports.updateRoom = async function (req, res) {
+
+    const roomName = req.params.roomName;
+    const status = req.query.status;
+
+    if (!roomName)
+        return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
+
+    if (!status)
+        return res.send(errResponse(baseResponse.SIGNUP_STATUS_EMPTY));
+
+    const editRoomInfo = await roomService.editRoom(roomName, status);
+    return res.send(editRoomInfo);
+    
+};

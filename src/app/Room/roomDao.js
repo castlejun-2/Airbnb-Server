@@ -13,14 +13,9 @@ async function insertRoomInfo(connection, insertRoomInfoParams) {
         INSERT INTO RoomInfo(hostId, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, beds, bathrooms, roomNumber, guestNumber)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
-  const updateUserType = `
-        INSERT INTO UserInfo(hostId, userType)
-        VALUES (?, 2);
-    `;
   const insertRoomInfoRow = await connection.query(
     insertRoomInfoQuery,
     insertRoomInfoParams,
-    updateUserType
   );
 
   return insertRoomInfoRow;
@@ -84,6 +79,16 @@ async function selectMyRoom(connection, userId) {
   const [selectMyRoomRow] = await connection.query(selectMyRoomQuery, userId);
   return selectMyRoomRow;
 }
+
+async function updateRoomInfo(connection, roomName, status) {
+  const updateRoomQuery = `
+        UPDATE RoomInfo 
+        SET status = ?
+        WHERE Name = ?;
+  `;
+  const updateRoomRow = await connection.query(updateRoomQuery, [status, roomName]);
+  return updateRoomRow[0];
+}
 module.exports = {
   selectRoom,
   insertRoomInfo,
@@ -91,5 +96,6 @@ module.exports = {
   selectRoomEmail,
   selectCountry,
   selectRoomRule,
-  selectMyRoom
+  selectMyRoom,
+  updateRoomInfo
 }

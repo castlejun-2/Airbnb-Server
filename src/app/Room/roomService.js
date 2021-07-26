@@ -27,11 +27,26 @@ exports.createRoom = async function (hostId, typeId, name, description, roomImag
         const roomIdResult = await roomDao.insertRoomInfo(connection, insertRoomInfoParams);
         console.log(`추가된 방 : ${roomIdResult[0].insertId}`)
         connection.release();
+        
         return response(baseResponse.SUCCESS);
-
 
     } catch (err) {
         logger.error(`App - createRoom Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+
+exports.editRoom = async function (roomName, status) {
+    try {
+        console.log('Edit Room Name:', roomName);
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editRoomResult = await roomDao.updateRoomInfo(connection, roomName, status);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - editRoom Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 };
