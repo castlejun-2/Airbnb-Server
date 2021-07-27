@@ -13,7 +13,7 @@ module.exports = function(app){
     app.get('/app/rooms/:country', room.getRoomByCountry);
 
     // 9. 숙소 규칙 조회 API
-    app.get('/app/roomrule/:roomName', room.getRoomRules);
+    app.get('/app/roomrules/:roomName', room.getRoomRules);
 
     // 10. 자신이 등록한 숙소 조회 API
     app.get('/app/hostrooms/:userId', room.getMyRoom);

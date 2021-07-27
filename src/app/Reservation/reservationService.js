@@ -23,8 +23,8 @@ exports.signUpReservation = async function (guestId,roomId,startDate,lastDate,gu
 
         const signUpReservationResult = await reservationDao.insertReservation(connection, signUpReservationParams);
         connection.release();
-
-        return response(baseResponse.SUCCESS); 
+        
+        return res.send(response(baseResponse.SUCCESS, signUpReservationResult));
     } catch (err) {
         logger.error(`App - createRoom Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);

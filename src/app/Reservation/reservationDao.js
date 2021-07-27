@@ -13,7 +13,7 @@ async function selectUserTravelHistory(connection, userId) {
            ur.lastDate as '종료일자'
           from UserInfo ui,UserReservation ur,RoomInfo ri,
           (select ri.id,ui.nickName from UserInfo ui join RoomInfo ri on ui.id=ri.hostId) ho
-          where ur.guestId = ui.id and ui.id = ? and ur.roomId = ri.id and ri.id=ho.id; 
+          where ur.guestId = ui.id and ui.userId = ? and ur.roomId = ri.id and ri.id=ho.id; 
     `;
     const [selectUserTravelHistoryRow] = await connection.query(selectUserTravelHistoryQuery, userId);
     return selectUserTravelHistoryRow;

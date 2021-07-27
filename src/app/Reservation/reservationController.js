@@ -21,7 +21,7 @@ const { Console } = require("winston/lib/winston/transports");
        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     const historyResult = await reservationProvider.retrieveTravelHistory(userId);
-    return res.send(historyResult);
+    return res.send(response(baseResponse.SUCCESS, historyResult));
 }
 
 /**
@@ -55,8 +55,8 @@ exports.travelReservation = async function (req,res) {
    const signUpResponse = await reservationService.signUpReservation(
       guestId,roomId,startDate,lastDate,guestNum,payment
    );
-
-   return res.send(signUpResponse);
+   
+   return res.send(response(baseResponse.SUCCESS, signUpResponse));
 }
 
 /**

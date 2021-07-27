@@ -21,5 +21,5 @@ const { Console } = require("winston/lib/winston/transports");
        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     const alarmResult = await messageProvider.retrieveAlarm(userId);
-    return res.send(alarmResult);
+    return res.send(alarmResult,baseResponse.SUCCESS);
 }
