@@ -23,3 +23,25 @@ const { Console } = require("winston/lib/winston/transports");
     const alarmResult = await messageProvider.retrieveAlarm(userId);
     return res.send(alarmResult,baseResponse.SUCCESS);
 }
+
+/**
+ * API No. 13
+ * API Name : 알람 삭제 API
+ * [POST] /app/alarms/:userId/withdrawal
+ * path variable : userId
+ * body : alarmId
+ */
+ exports.deleteAlarm = async function (req, res) {
+
+   const userId = req.params.userId;
+   const alarmId = req.body.alarmId;
+
+   if(!userId)
+      return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+   if(!alarmId)
+      return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+   
+   const deleteAlarmInfo = await messageService.deleteAlarm(userId,alarmId);
+       return res.send(deleteAlarmInfo);
+}

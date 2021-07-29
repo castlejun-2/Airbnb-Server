@@ -27,50 +27,34 @@ exports.postUsers = async function (req, res) {
     /**
      * Body: userId, userImageUrl, passwd, nickName, firstName, lastName, address, phoneNumber, emailAddress, userType, gender, birtyday
      */
-    const {userId, userImageUrl, passwd, nickName, firstName, lastName, address, phoneNumber, emailAddress, gender, birthday} = req.body;
+    const {phoneNumber, emailAddress, passwd, lastName, firstName, birthday} = req.body;
 
-    // 빈 값 체크
-    if (!userId)
-        return res.send(response(baseResponse.USER_USERID_EMPTY));
+    // 핸드폰 번호 빈 값 체크
+    if (!phoneNumber)
+        return res.send(response(baseResponse.USER_PHONENUMBER_EMPTY));
 
     // 비밀번호 길이 체크
     if (passwd.length < 6 || passwd.length > 30)
         return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
 
-    // 형식 체크 (by 정규표현식)
+    // 이메일 형식 체크 (by 정규표현식)
     if (!regexEmail.test(emailAddress))
         return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
 
-    // 빈 값 체크
-    if (!nickName)
-        return res.send(response(baseResponse.USER_NICKNAME_EMPTY));
-
-    // 빈 값 체크
+    // 이름 빈 값 체크
     if (!firstName)
         return res.send(response(baseResponse.USER_FIRSTNAME_EMPTY));
     
-    // 빈 값 체크
+    // 성 빈 값 체크
     if (!lastName)
         return res.send(response(baseResponse.USER_LASTNAME_EMPTY));
 
-    // 빈 값 체크
-    if (!address)
-        return res.send(response(baseResponse.USER_ADDRESS_EMPTY));
-        
-    // 빈 값 체크
-    if (!phoneNumber)
-        return res.send(response(baseResponse.USER_PHONENUMBER_EMPTY));
-        
-    // 빈 값 체크
-    if (!gender)
-        return res.send(response(baseResponse.USER_GENDER_EMPTY));
-
-    // 빈 값 체크
+    // 생일 빈 값 체크
     if (!birthday)
         return res.send(response(baseResponse.USER_BIRTHDAY_EMPTY));    
     
     const signUpResponse = await userService.createUser(
-        userId, userImageUrl, passwd, nickName, firstName, lastName, address, phoneNumber, emailAddress, gender, birthday
+        phoneNumber, emailAddress, passwd, lastName, firstName, birthday
     );
 
     return res.send(signUpResponse);
@@ -134,7 +118,6 @@ exports.login = async function (req, res) {
     // 비밀번호 길이 체크
     if (passwd.length < 6 || passwd.length > 30)
         return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH)); 
-    
     const signInResponse = await userService.postSignIn(userId, passwd);
 
     return res.send(signInResponse);
@@ -154,15 +137,31 @@ exports.patchUsers = async function (req, res) {
 
     const userIdFromJWT = req.verifiedToken.userId
     const userId = req.params.userId;
-    const nickname = req.body.nickname;
+    const lastName = req.body.lastName;
+    const firstName = req.body.firstName;
+    const gender = req.body.gender;
+    const birthday = req.body.birthday;
+    const emailAddress = req.body.emailAddress;
+    const phoneNumber = req.body.phoneNumber;
 
     if (userIdFromJWT != userId)
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     else {
-        if (!nickname)
-            return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
-
-        const editUserInfo = await userService.editUser(userId, nickname);
+        if (!userId) 
+            return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+        if (!lastName)
+            return res.send(errResponse(baseResponse.USER_LASTNAME_EMPTY));
+        if (!firstName)
+            return res.send(errResponse(baseResponse.USER_FIRSTNAME_EMPTY));
+        if (!gender)
+            return res.send(errResponse(baseResponse.USER_GENDER_EMPTY));
+        if (!birthday)
+            return res.send(errResponse(baseResponse.USER_BIRTHDAY_EMPTY));
+        if (!emailAddress)
+            return res.send(errResponse(baseResponse.SIGNIN_EMAIL_EMPTY));
+        if (!phoneNumber)
+            return res.send(errResponse(baseResponse.USER_PHONENUMBER_EMPTY));                 
+        const editUserInfo = await userService.editUser(userId, lastName, firstName, gender, birthday, emailAddress, phoneNumber);
         return res.send(editUserInfo);
     }
 };

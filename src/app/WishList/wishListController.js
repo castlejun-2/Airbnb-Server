@@ -18,6 +18,9 @@ const { Console } = require("winston/lib/winston/transports");
  exports.postWishList = async function (req, res) {
     const userId = req.params.userId;
     const listName = req.body.listName;
+    
+    if(!userId) 
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     if(!listName) 
         return res.send(errResponse(baseResponse.USER_WISHLIST_EMPTY));
@@ -39,7 +42,7 @@ exports.getWishList = async function (req, res) {
         return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     const viewListName = await wishListProvider.retrieveWishList(userId);
-    return res.send(viewListName);
+    return res.send(response(baseResponse.SUCCESS, viewListName));
 }
 
 /**
@@ -60,5 +63,5 @@ exports.getListContent = async function (req, res) {
        return res.send(errResponse(baseResponse.USER_WISHLIST_EMPTY));
     
     const viewListContent = await wishListProvider.retrieveListContent(userId,listName);
-    return res.send(viewListContent);
+    return res.send(response(baseResponse.SUCCESS, viewListContent));
 }

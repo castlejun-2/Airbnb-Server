@@ -51,16 +51,16 @@ async function selectCountry(connection, country) {
   return roomRow;
 }
 //방 규칙 조회
-async function selectRoomRule(connection, roomName) {
+async function selectRoomRule(connection, roomId) {
   const selectRoomRuleQuery = `
         select ri.name as '숙소 이름',
                rr.checkIn as 'check-in',
                rr.checkout as 'check-out',
                rr.rules as '숙소이용규칙'
         from RoomRules rr, RoomInfo ri
-        where rr.roomId=ri.Id and ri.name = ?;
+        where rr.roomId=ri.Id and ri.id = ?;
         `;
-  const selectRoomRuleRow = await connection.query(selectRoomRuleQuery, roomName);
+  const selectRoomRuleRow = await connection.query(selectRoomRuleQuery, roomId);
   return selectRoomRuleRow;      
 }
 //자신이 등록한 숙소 조회
@@ -74,7 +74,7 @@ async function selectMyRoom(connection, userId) {
                ri.roomImageURL as '숙소 사진',
                ri.name as '숙소 이름'
         from RoomInfo ri,UserInfo ui
-        where ri.hostId = ui.Id and ui.userId = ?;
+        where ri.hostId = ui.id and ui.id = ?;
   `;
   const [selectMyRoomRow] = await connection.query(selectMyRoomQuery, userId);
   return selectMyRoomRow;
@@ -84,10 +84,20 @@ async function updateRoomInfo(connection, roomName, status) {
   const updateRoomQuery = `
         UPDATE RoomInfo 
         SET status = ?
-        WHERE Name = ?;
+        WHERE id = ?;
   `;
   const updateRoomRow = await connection.query(updateRoomQuery, [status, roomName]);
   return updateRoomRow[0];
+}
+
+async function updateRoomTitle(connection, roomId, updateName) {
+  const updateRoomQuery = `
+        UPDATE RoomInfo 
+        SET name = ?
+        WHERE id = ?;
+  `;
+  const updateRoomRow = await connection.query(updateRoomQuery, [updateName, roomId]);
+  return updateRoomRow[0];  
 }
 module.exports = {
   selectRoom,

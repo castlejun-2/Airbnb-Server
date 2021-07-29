@@ -50,3 +50,18 @@ exports.editRoom = async function (roomName, status) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.editRoomTitle = async function (roomName, updateName) {
+    try {
+        console.log('Edit Room Name:', roomName);
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editRoomTitleResult = await roomDao.updateRoomTitle(connection, roomName, updateName);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - editRoomTitle Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }    
+}

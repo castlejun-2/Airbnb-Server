@@ -14,7 +14,7 @@ const { Console } = require("console");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createUser = async function (userId, userImageUrl, passwd, nickName, firstName, lastName, address, phoneNumber, emailAddress, gender, birthday) {
+exports.createUser = async function (phoneNumber, emailAddress, passwd, lastName, firstName, birthday) {
     try {
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(emailAddress);
@@ -27,7 +27,7 @@ exports.createUser = async function (userId, userImageUrl, passwd, nickName, fir
             .update(passwd)
             .digest("hex");
             
-        const insertUserInfoParams = [userId, userImageUrl, hashedPassword, nickName, firstName, lastName, address, phoneNumber, emailAddress, gender, birthday];
+        const insertUserInfoParams = [phoneNumber, emailAddress, hashedPassword, lastName, firstName, birthday];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
@@ -35,7 +35,6 @@ exports.createUser = async function (userId, userImageUrl, passwd, nickName, fir
         console.log(`추가된 회원 : ${userIdResult[0].insertId}`)
         connection.release();
         return response(baseResponse.SUCCESS);
-
 
     } catch (err) {
         logger.error(`App - createUser Service error\n: ${err.message}`);
@@ -46,14 +45,15 @@ exports.createUser = async function (userId, userImageUrl, passwd, nickName, fir
 
 // TODO: After 로그인 인증 방법 (JWT)
 
-exports.postSignIn = async function (userId, passwd) {
+exports.postSignIn = async function (emailAddress, passwd) {
     try{
         // 아이디 여부 확인
-        const idRows = await userProvider.retrieveUser(userId);
+        const idRows = await userProvider.retrieveUser(emailAddress);
         
-        if (idRows.length < 1) return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
-        const selectId = idRows.userId;
-        
+        if (idRows.length < 1)
+            return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
+
+        const selectId = idRows.id;
         // 비밀번호 확인
         const hashedPassword = await crypto
             .createHash("sha512")
@@ -67,20 +67,19 @@ exports.postSignIn = async function (userId, passwd) {
         }
         
         // 계정 상태 확인
-        const userInfoRows = await userProvider.accountCheck(userId);
-
+        const userInfoRows = await userProvider.accountCheck(emailAddress);
         if (userInfoRows[0].status === "INACTIVE") {
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
         } else if (userInfoRows[0].status === "DELETED") {
             return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
         }
 
-        console.log('Login Id: ', userInfoRows[0].userId); // DB의 userId
+        console.log('Login Id: ', userInfoRows[0].id); // DB의 userId
 
         //토큰 생성 Service
         let token = await jwt.sign(
             {
-                userId: userInfoRows[0].userId,
+                userId: userInfoRows[0].id,
             }, // 토큰의 내용(payload)
             secret_config.jwtsecret, // 비밀키
             {
@@ -89,7 +88,7 @@ exports.postSignIn = async function (userId, passwd) {
             } 
         );
 
-        return response(baseResponse.SUCCESS, {'userId': userInfoRows[0].userId, 'jwt': token});
+        return response(baseResponse.SUCCESS, {'userId': userInfoRows[0].id, 'jwt': token});
 
     } catch (err) {
         logger.error(`App - postSignIn Service error\n: ${err.message} \n${JSON.stringify(err)}`);
@@ -97,11 +96,12 @@ exports.postSignIn = async function (userId, passwd) {
     }
 };
 
-exports.editUser = async function (userId, nickname) {
+exports.editUser = async function (userId, lastName, firstName, gender, birthday, emailAddress, phoneNumber) {
     try {
         console.log('Edit Id:', userId);
         const connection = await pool.getConnection(async (conn) => conn);
-        const editUserResult = await userDao.updateUserInfo(connection, userId, nickname);
+        const selectUserPasswordParams = [lastName, firstName, gender, birthday, emailAddress, phoneNumber, userId];
+        const editUserResult = await userDao.updateUserInfo(connection, selectUserPasswordParams);
         connection.release();
 
         return response(baseResponse.SUCCESS);
@@ -119,7 +119,7 @@ exports.deleteUser = async function (userId) {
         const deleteUserResult = await userDao.deleteUserInfo(connection, userId);
         connection.release();
 
-        return response(baseResponse.SUCCESS);
+        return response(baseResponse.SUCCESS,deleteUserResult);
     } catch (err) {
         logger.error(`App - editUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);

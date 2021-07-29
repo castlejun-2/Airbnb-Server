@@ -35,9 +35,9 @@ exports.retrieveRoom = async function (country) {
      return roomResult;
 };
 
-exports.retrieveRoomRule = async function (roomName) {
+exports.retrieveRoomRule = async function (roomId) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const rulesResult = await roomDao.selectRoomRule(connection, roomName);
+  const rulesResult = await roomDao.selectRoomRule(connection, roomId);
 
   connection.release();
 

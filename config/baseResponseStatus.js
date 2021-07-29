@@ -15,7 +15,10 @@ module.exports = {
     SIGNUP_PASSWORD_LENGTH : { "isSuccess": false, "code": 2005, "message":"비밀번호는 6~20자리를 입력해주세요." },
     SIGNUP_NICKNAME_EMPTY : { "isSuccess": false, "code": 2006, "message":"닉네임을 입력 해주세요." },
     SIGNUP_NICKNAME_LENGTH : { "isSuccess": false,"code": 2007,"message":"닉네임은 최대 20자리를 입력해주세요." },
+    SIGNUP_ROOMNAME_EMPTY : { "isSuccess:": false, "code": 5034, "message":"방의 아이디를 입력해주세요."},
     SINGUP_ROOMTYPE_EMPTY : { "isSuccess": false,"code":5015, "message":"방의 유형을 입력해주세요."},
+    SIGNUP_STATUS_EMPTY : { "isSuccess:": false, "code": 5041, "message":"수정할 방의 상태를 입력해주세요."},
+    SINGUP_UPDATEROOMNAME_EMPTY : { "isSuccess": false,"code":5044, "message":"변경할 방의 이름을 입력해주세요."},
 
     SIGNIN_EMAIL_EMPTY : { "isSuccess": false, "code": 2008, "message":"이메일을 입력해주세요" },
     SIGNIN_EMAIL_LENGTH : { "isSuccess": false, "code": 2009, "message":"이메일은 30자리 미만으로 입력해주세요." },
@@ -23,7 +26,7 @@ module.exports = {
     SIGNIN_PASSWORD_EMPTY : { "isSuccess": false, "code": 2011, "message": "비밀번호를 입력 해주세요." },
 
     USER_USERID_EMPTY : { "isSuccess": false, "code": 2012, "message": "userId를 입력해주세요." },
-    USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 5022, "message": "nickname을 설정해주세요." },
+    USER_ALARMID_EMPTY : { "isSuccess": false, "code": 5042, "message": "alarmId를 입력해주세요." },
     USER_FIRSTNAME_EMPTY : { "isSuccess": false, "code": 5023, "message": "이름을 입력해주세요." },
     USER_LASTNAME_EMPTY : { "isSuccess": false, "code": 5024, "message": "성을 입력해주세요." },
     USER_ADDRESS_EMPTY : { "isSuccess": false, "code": 5025, "message": "주소를 입력해주세요." },
@@ -35,6 +38,7 @@ module.exports = {
     ROOM_ROOMNAME_EMPTY : { "isSuccess": false, "code": 5016, "message": "방의 이름을 입력해주세요." },
     ROOM_ROOMCOUNTRY_EMPTY : { "isSuccess": false, "code": 5017, "message": "방이 위치한 국가를 입력해주세요." },
     ROOM_ROOMCITY_EMPTY : { "isSuccess": false, "code": 5018, "message": "방이 위치한 도시를 입력해주세요." },
+    ROOM_ROOMDETAILADDRESS_EMPTY : { "isSuccess:": false, "code": 5044, "message":"숙소의 세부 주소를 입력해주세요."},
     ROOM_ROOMPRICE_EMPTY : { "isSuccess": false, "code": 5019, "message": "방이 가격을 입력해주세요." },
     ROOM_ROOMGUESTNUMBER_EMPTY : { "isSuccess": false, "code": 5020, "message": "방의 최대 인원을 입력해주세요." },
     RESERVATION_STARTDATE_EMPTY : { "isSuccess": false, "code": 5034, "message": "여행 시작 일자를 입력해주세요." },
@@ -52,8 +56,7 @@ module.exports = {
     // Response error
     SIGNUP_USER_NOT_REGISTER : { "isSuccess:": false, "code": 5029, "message":"존재하지 않는 회원입니다."},
     SIGNUP_ROOM_NOT_REGISTER : { "isSuccess:": false, "code": 5030, "message":"유형에 맞는 방이 존재하지 않습니다."},
-    SIGNUP_ROOMNAME_EMPTY : { "isSuccess:": false, "code": 5034, "message":"방의 이름을 입력해주세요."},
-    SIGNUP_STATUS_EMPTY : { "isSuccess:": false, "code": 5041, "message":"수정할 방의 상태를 입력해주세요."},
+    SINGUP_COUNTRY_NOT_EXIST : { "isSuccess:": false, "code": 5043, "message":"해당 국가의 방은 존재하지 않습니다."},
     SIGNUP_WISHLIST_NOT_REGISTER : { "isSuccess:": false, "code": 5032, "message":"위시리스트가 존재하지 않습니다."},
     SIGNUP_LISTCONTENT_NOT_REGISTER : { "isSuccess:": false, "code": 5033, "message":"위시리스트 속 방이 존재하지 않습니다."},
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

@@ -13,7 +13,7 @@ async function selectUserTravelHistory(connection, userId) {
            ur.lastDate as '종료일자'
           from UserInfo ui,UserReservation ur,RoomInfo ri,
           (select ri.id,ui.nickName from UserInfo ui join RoomInfo ri on ui.id=ri.hostId) ho
-          where ur.guestId = ui.id and ui.userId = ? and ur.roomId = ri.id and ri.id=ho.id; 
+          where ur.guestId = ui.id and ui.id = ? and ur.roomId = ri.id and ri.id=ho.id; 
     `;
     const [selectUserTravelHistoryRow] = await connection.query(selectUserTravelHistoryQuery, userId);
     return selectUserTravelHistoryRow;
@@ -53,7 +53,7 @@ async function selectRejectReservation(connection, userId) {
          CONCAT(date_format(ur.startDate,'%Y-%m-%d'),'~',date_format(ur.lastDate,'%Y-%m-%d')) as '날짜'
   from UserInfo ui, UserReservation ur, RoomInfo ri,
   (select ri.id,ui.nickName from UserInfo ui join RoomInfo ri on ui.id = ri.hostId) ho
-  where ui.id = ur.guestId and ur.roomId = ri.id and ui.userId = ? and ur.status = 'REJECT' and ho.id = ri.id;
+  where ui.id = ur.guestId and ur.roomId = ri.id and ui.id = ? and ur.status = 'REJECT' and ho.id = ri.id;
   `;
   const [selectRejectReservationRow] = await connection.query(selectRejectReservationQuery,userId);
   return selectRejectReservationRow;
@@ -66,7 +66,7 @@ async function selectHostRoomReservation(connection,userId) {
          ri.name as '예약 숙소',
          CONCAT(date_format(ur.startDate,'%Y-%m-%d'),'~',date_format(ur.lastDate,'%Y-%m-%d')) as '예약일자'
   from UserInfo ui, RoomInfo ri, UserReservation ur
-  where ur.roomId = ri.id and ur.guestId = ui.id and ri.hostId = ui.id and ui.userId = ?;
+  where ur.roomId = ri.id and ur.guestId = ui.id and ri.hostId = ui.id and ui.id = ?;
   `;
   const [selectHostRoomReservationRow] = await connection.query(selectHostRoomReservationQuery,userId);
   return selectHostRoomReservationRow;

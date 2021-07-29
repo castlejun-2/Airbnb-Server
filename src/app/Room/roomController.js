@@ -45,11 +45,11 @@ const {emit} = require("nodemon");
 
     // 방 가격 값 체크
     if (!price)
-        return res.send(response(baseResponse.ROOM_ROOMCITY_EMPTY)); 
+        return res.send(response(baseResponse.ROOM_ROOMPRICE_EMPTY)); 
 
     // 방 최대 인원 체크
     if (!guestNumber)
-        return res.send(response(baseResponse.ROOM_ROOMCITY_EMPTY));
+        return res.send(response(baseResponse.ROOM_ROOMGUESTNUMBER_EMPTY));
 
     // 형식 체크 (by 정규표현식)
     if (!regexEmail.test(email))
@@ -96,7 +96,7 @@ exports.getRooms = async function (req, res) {
     const country = req.params.country;
 
     if (!country)
-        return res.send(errResponse(baseResponse.SIGNUP_ROOM_NOT_REGISTER));
+        return res.send(errResponse(baseResponse.SINGUP_COUNTRY_NOT_EXIST));
 
     const roomByCountry = await roomProvider.retrieveRoom(country);
     return res.send(response(baseResponse.SUCCESS, roomByCountry));
@@ -105,19 +105,19 @@ exports.getRooms = async function (req, res) {
 /**
  * API No. 9
  * API Name : 숙소 규칙 조회 API (+국가를 통한 조회)
- * [GET] /app/roomrule/:roomName
+ * [GET] /app/roomrule/:roomId
  */
 exports.getRoomRules = async function (req, res) {
 
     /**
-     * Path Variable: roomName
+     * Path Variable: roomId
      */
-    const roomName = req.params.roomName;
+    const roomId = req.params.roomId;
 
     if (!roomName) 
         return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
     
-    const roomRules = await roomProvider.retrieveRoomRule(roomName);
+    const roomRules = await roomProvider.retrieveRoomRule(roomId);
     return res.send(response(baseResponse.SUCCESS, roomRules));    
 }
 
@@ -144,16 +144,31 @@ exports.getMyRoom = async function (req, res) {
  */
 exports.updateRoom = async function (req, res) {
 
-    const roomName = req.params.roomName;
-    const status = req.query.status;
+    const roomId = req.params.roomName;
+    const status = req.body;
 
-    if (!roomName)
+    if (!roomId)
         return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
 
     if (!status)
         return res.send(errResponse(baseResponse.SIGNUP_STATUS_EMPTY));
 
-    const editRoomInfo = await roomService.editRoom(roomName, status);
+    const editRoomInfo = await roomService.editRoom(roomId, status);
     return res.send(editRoomInfo);
     
 };
+
+exports.updateTitle = async function (req,res) {
+
+    const roomName = req.params.roomName;
+    const updateName = req.body;
+
+    if (!roomName)
+        return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
+
+    if (!updateName)
+        return res.send(errResponse(baseResponse.SINGUP_UPDATEROOMNAME_EMPTY));
+
+    const editRoomName = await roomService.editRoomTitle(roomName, updateName);
+    return res.send(editRoomName);
+}

@@ -24,9 +24,9 @@ exports.retrieveUserList = async function (emailAddress) {
   }
 };
 
-exports.retrieveUser = async function (userId) {
+exports.retrieveUser = async function (emailAddress) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const userResult = await userDao.selectUserId(connection, userId);
+  const userResult = await userDao.selectUserId(connection, emailAddress);
   
   connection.release();
 
@@ -36,9 +36,9 @@ exports.retrieveUser = async function (userId) {
      return userResult[0];
 };
 
-exports.emailCheck = async function (userId) {
+exports.emailCheck = async function (emailAddress) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const emailCheckResult = await userDao.selectUserEmail(connection, userId);
+  const emailCheckResult = await userDao.selectUserEmail(connection, emailAddress);
   connection.release();
 
   return emailCheckResult;
@@ -51,12 +51,12 @@ exports.passwordCheck = async function (selectUserPasswordParams) {
       selectUserPasswordParams
   );
   connection.release();
-  return passwordCheckResult[0];
+  return passwordCheckResult;
 };
 
-exports.accountCheck = async function (userId) {
+exports.accountCheck = async function (emailAddress) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const userAccountResult = await userDao.selectUserAccount(connection, userId);
+  const userAccountResult = await userDao.selectUserAccount(connection, emailAddress);
   connection.release();
 
   return userAccountResult;

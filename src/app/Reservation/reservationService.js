@@ -30,3 +30,4 @@ exports.signUpReservation = async function (guestId,roomId,startDate,lastDate,gu
         return errResponse(baseResponse.DB_ERROR);
     }    
 };
+

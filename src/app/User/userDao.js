@@ -11,7 +11,7 @@ async function selectUser(connection) {
 // 이메일로 회원 조회
 async function selectUserEmail(connection, emailAddress) {
   const selectUserEmailQuery = `
-                SELECT userId, nickName, emailAddress 
+                SELECT id, nickName, emailAddress 
                 FROM UserInfo 
                 WHERE emailAddress = ?;
                 `;
@@ -20,21 +20,21 @@ async function selectUserEmail(connection, emailAddress) {
 }
 
 // userId 회원 조회
-async function selectUserId(connection, userId) {
+async function selectUserId(connection, emailAddress) {
   const selectUserIdQuery = `
-                 SELECT userId, emailAddress, nickName 
+                 SELECT id, emailAddress, nickName 
                  FROM UserInfo 
-                 WHERE userId = ?;
+                 WHERE emailAddress = ?;
                  `;
-  const [userRow] = await connection.query(selectUserIdQuery, userId);
+  const [userRow] = await connection.query(selectUserIdQuery, emailAddress);
   return userRow;
 }
 
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
   const insertUserInfoQuery = `
-        INSERT INTO UserInfo(userId, userImageUrl, passwd, nickName, firstName, lastName, address, phoneNumber, emailAddress, gender, birthday)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO UserInfo(phoneNumber, emailAddress, passwd, lastName, firstName, birthday)
+        VALUES (?, ?, ?, ?, ?, ?);
     `;
   const insertUserInfoRow = await connection.query(
     insertUserInfoQuery,
@@ -47,49 +47,55 @@ async function insertUserInfo(connection, insertUserInfoParams) {
 // 패스워드 체크
 async function selectUserPassword(connection, selectUserPasswordParams) {
   const selectUserPasswordQuery = `
-        SELECT userId, nickname, passwd
-        FROM UserInfo 
-        WHERE userId = ? AND passwd = ?;
+        SELECT id, nickname, passwd
+        FROM UserInfo
+        WHERE id = ? AND passwd = ?;
         `;
   const selectUserPasswordRow = await connection.query(
       selectUserPasswordQuery,
       selectUserPasswordParams
   );
-  return selectUserPasswordRow;
+  return selectUserPasswordRow[0];
 }
 
 // 유저 계정 상태 체크 (jwt 생성 위해 id 값도 가져온다.)
-async function selectUserAccount(connection, userId) {
+async function selectUserAccount(connection, emailAddress) {
   const selectUserAccountQuery = `
-        SELECT userId, status
+        SELECT id, status
         FROM UserInfo 
-        WHERE userId = ?;
+        WHERE emailAddress = ?;
         `;
   const selectUserAccountRow = await connection.query(
       selectUserAccountQuery,
-      userId
+      emailAddress
   );
   return selectUserAccountRow[0];
 }
 
-async function updateUserInfo(connection, userId, nickName) {
+async function updateUserInfo(connection, selectUserPasswordParams) {
   const updateUserQuery = `
         UPDATE UserInfo 
-        SET nickName = ?
-        WHERE userId = ?;
+        SET lastName = ?, firstName = ?, gender = ?, birthday = ?, emailAddress = ?, phoneNumber = ?
+        WHERE id = ?;
   `;
-  const updateUserRow = await connection.query(updateUserQuery, [nickName, userId]);
+  const updateUserRow = await connection.query(updateUserQuery, selectUserPasswordParams);
   return updateUserRow[0];
 }
 
 async function deleteUserInfo(connection, userId) {
+  const selectUserQuery = `
+        SELECT emailAddress
+        FROM UserInfo
+        where id = ?;
+  `;
   const deleteUserQuery = `
         UPDATE UserInfo
         SET status = 'DELETE'
-        WHERE userId = ?;
+        WHERE id = ?;
   `;
+  const selectUserRow = await connection.query(selectUserQuery, userId);
   const deleteUserRow = await connection.query(deleteUserQuery, userId);
-  return deleteUserRow[0];
+  return selectUserRow[0];
 }
 
 module.exports = {
