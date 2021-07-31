@@ -13,14 +13,14 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createRoom = async function (hostId, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber) {
+exports.createRoom = async function (userIdFromJWT, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber) {
     try {
         // 이메일 중복 확인
         const emailRows = await roomProvider.emailCheck(emailAddress);
         if (emailRows.length > 0)
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
 
-        const insertRoomInfoParams = [hostId, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber];
+        const insertRoomInfoParams = [userIdFromJWT, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
@@ -36,14 +36,44 @@ exports.createRoom = async function (hostId, typeId, name, description, roomImag
     }
 };
 
-exports.editRoom = async function (roomName, status) {
+exports.editDeleteRoom = async function (userIdFromJWT, roomId) {
     try {
-        console.log('Edit Room Name:', roomName);
+        console.log('Edit Room Id:', roomId);
         const connection = await pool.getConnection(async (conn) => conn);
-        const editRoomResult = await roomDao.updateRoomInfo(connection, roomName, status);
+        const editRoomResult = await roomDao.deleteRoomInfo(connection,userIdFromJWT, roomId);
         connection.release();
 
-        return response(baseResponse.SUCCESS);
+        return response(baseResponse.SUCCESS,editRoomResult);
+
+    } catch (err) {
+        logger.error(`App - editRoom Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+
+exports.editStopRoom = async function (userIdFromJWT, roomId) {
+    try {
+        console.log('Edit Room Id:', roomId);
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editRoomResult = await roomDao.stopRoomInfo(connection,userIdFromJWT, roomId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS,editRoomResult);
+
+    } catch (err) {
+        logger.error(`App - editRoom Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+
+exports.editRestRoom = async function (userIdFromJWT, roomId) {
+    try {
+        console.log('Edit Room Id:', roomId);
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editRoomResult = await roomDao.restRoomInfo(connection,userIdFromJWT, roomId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS,editRoomResult);
 
     } catch (err) {
         logger.error(`App - editRoom Service error\n: ${err.message}`);

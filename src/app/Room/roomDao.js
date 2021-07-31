@@ -64,7 +64,7 @@ async function selectRoomRule(connection, roomId) {
   return selectRoomRuleRow;      
 }
 //자신이 등록한 숙소 조회
-async function selectMyRoom(connection, userId) {
+async function selectMyRoom(connection, userIdFromJWT) {
   const selectMyRoomQuery = `
         select ui.nickname as '방의 호스트',
 	             case
@@ -76,18 +76,56 @@ async function selectMyRoom(connection, userId) {
         from RoomInfo ri,UserInfo ui
         where ri.hostId = ui.id and ui.id = ?;
   `;
-  const [selectMyRoomRow] = await connection.query(selectMyRoomQuery, userId);
+  const [selectMyRoomRow] = await connection.query(selectMyRoomQuery, userIdFromJWT);
   return selectMyRoomRow;
 }
 
-async function updateRoomInfo(connection, roomName, status) {
-  const updateRoomQuery = `
-        UPDATE RoomInfo 
-        SET status = ?
-        WHERE id = ?;
+async function deleteRoomInfo(connection, userIdFromJWT, roomId) {
+  const showDeleteRoomQuery = `
+        SELECT status
+        FROM RoomInfo
+        WHERE id = ? and hostId = ?;
   `;
-  const updateRoomRow = await connection.query(updateRoomQuery, [status, roomName]);
-  return updateRoomRow[0];
+  const deleteRoomQuery = `
+        UPDATE RoomInfo 
+        SET status = 'DELETE'
+        WHERE id = ? and hostId = ?;
+  `;
+  const showDeleteRoomRow = await connection.query(showDeleteRoomQuery, [roomId, userIdFromJWT]);
+  const deleteRoomRow = await connection.query(deleteRoomQuery, [roomId, userIdFromJWT]);
+  return showDeleteRoomRow[0];
+}
+
+async function stopRoomInfo(connection, userIdFromJWT, roomId) {
+  const showStopRoomQuery = `
+        SELECT status
+        FROM RoomInfo
+        WHERE id = ? and hostId = ?;
+  `;
+  const stopRoomQuery = `
+        UPDATE RoomInfo 
+        SET status = 'STOP'
+        WHERE id = ? and hostId = ?;
+  `;
+  const showStopRoomRow = await connection.query(showStopRoomQuery, [roomId, userIdFromJWT]);
+  const stopRoomRow = await connection.query(stopRoomQuery, [roomId, userIdFromJWT]);
+  return showStopRoomRow[0];
+}
+
+async function restRoomInfo(connection, userIdFromJWT, roomId) {
+  const showRestRoomQuery = `
+        SELECT status
+        FROM RoomInfo
+        WHERE id = ? and hostId = ?;
+  `;
+  const restRoomQuery = `
+        UPDATE RoomInfo 
+        SET status = 'REST'
+        WHERE id = ? and hostId = ?;
+  `;
+  const ShowRestRoomRow = await connection.query(showRestRoomQuery, [roomId, userIdFromJWT]);
+  const restRoomRow = await connection.query(restRoomQuery, [roomId, userIdFromJWT]);
+  return ShowRestRoomRow[0];
 }
 
 async function updateRoomTitle(connection, roomId, updateName) {
@@ -107,5 +145,8 @@ module.exports = {
   selectCountry,
   selectRoomRule,
   selectMyRoom,
-  updateRoomInfo
+  deleteRoomInfo,
+  stopRoomInfo,
+  restRoomInfo,
+  updateRoomTitle,
 }

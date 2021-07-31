@@ -14,14 +14,11 @@ const {emit} = require("nodemon");
  */
  exports.postRooms = async function (req, res) {
 
+    const userIdFromJWT = req.verifiedToken.userId;
     /**
-     * Body: hostId,typeId,name,description,roomImageUrl,Country,City,email,price,checkIn,checkOut,bed,bathrooms,roomNumber,guestNumber
+     * Body: typeId,name,description,roomImageUrl,Country,City,email,price,checkIn,checkOut,bed,bathrooms,roomNumber,guestNumber
      */
-    const {hostId, typeId, name, description, roomImageUrl, country, city, email, price, checkIn, checkOut, bed, bathrooms, roomNumber, guestNumber} = req.body;
-
-    // 빈 값 체크
-    if (!hostId)
-        return res.send(response(baseResponse.ROOM_HOSTID_EMPTY));
+    const {typeId, name, description, roomImageUrl, country, city, email, price, checkIn, checkOut, bed, bathrooms, roomNumber, guestNumber} = req.body;
 
     // 방의 종류 빈 값 체크
     if (!typeId)
@@ -56,7 +53,7 @@ const {emit} = require("nodemon");
         return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
 
     const signUpResponse = await roomService.createRoom(
-        hostId, typeId, name, description, roomImageUrl, country, city, email, price, checkIn, checkOut, bed, bathrooms, roomNumber, guestNumber
+        userIdFromJWT, typeId, name, description, roomImageUrl, country, city, email, price, checkIn, checkOut, bed, bathrooms, roomNumber, guestNumber
     );
 
     return res.send(signUpResponse);
@@ -124,37 +121,67 @@ exports.getRoomRules = async function (req, res) {
 /**
  * API No. 10
  * API Name : 자신이 등록한 숙소 조회 API
- * [GET] /app/hostrooms/:userId
+ * [GET] /app/hostrooms
  */
 exports.getMyRoom = async function (req, res) {
     
-    const userId = req.params.userId;
-    
-    if (!userId)
-        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    const userIdFromJWT = req.verifiedToken.userId;
 
-    const myRoom = await roomProvider.retrieveMyRoom(userId);
+    const myRoom = await roomProvider.retrieveMyRoom(userIdFromJWT);
     return res.send(response(baseResponse.SUCCESS, myRoom));
 }
 
 /**
  * API No. 11
- * API Name : 숙소 상태 변경 API
- * [PATCH] /app/rooms/:roomName/withdrawal
+ * API Name : 숙소 상태 변경 API (삭제))
+ * [PATCH] /app/rooms/:roomId/withdrawal
  */
-exports.updateRoom = async function (req, res) {
+exports.deleteRoom = async function (req, res) {
 
+    const userIdFromJWT = req.verifiedToken.userId;
     const roomId = req.params.roomName;
-    const status = req.body;
 
     if (!roomId)
         return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
 
-    if (!status)
-        return res.send(errResponse(baseResponse.SIGNUP_STATUS_EMPTY));
+    const deleteRoomInfo = await roomService.editDeleteRoom(userIdFromJWT, roomId);
+    return res.send(deleteRoomInfo);
+    
+};
 
-    const editRoomInfo = await roomService.editRoom(roomId, status);
-    return res.send(editRoomInfo);
+/**
+ * API No. 21
+ * API Name : 숙소 상태 변경 API (운영정지)
+ * [PATCH] /app/rooms/:roomId/stop
+ */
+ exports.stopRoom = async function (req, res) {
+
+    const userIdFromJWT = req.verifiedToken.userId;
+    const roomId = req.params.roomName;
+
+    if (!roomId)
+        return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
+
+    const stopRoomInfo = await roomService.editStopRoom(userIdFromJWT, roomId);
+    return res.send(stopRoomInfo);
+    
+};
+
+/**
+ * API No. 22
+ * API Name : 숙소 상태 변경 API (휴식모드)
+ * [PATCH] /app/rooms/:roomId/rest
+ */
+ exports.restRoom = async function (req, res) {
+
+    const userIdFromJWT = req.verifiedToken.userId;
+    const roomId = req.params.roomName;
+
+    if (!roomId)
+        return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
+
+    const restRoomInfo = await roomService.editRestRoom(userIdFromJWT, roomId);
+    return res.send(restRoomInfo);
     
 };
 

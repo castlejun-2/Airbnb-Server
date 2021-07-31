@@ -1,4 +1,4 @@
-async function selectUserTravelHistory(connection, userId) {
+async function selectUserTravelHistory(connection, userIdFromJWT) {
     const selectUserTravelHistoryQuery = `
     select case
                   when startDate > CURRENT_DATE
@@ -15,7 +15,7 @@ async function selectUserTravelHistory(connection, userId) {
           (select ri.id,ui.nickName from UserInfo ui join RoomInfo ri on ui.id=ri.hostId) ho
           where ur.guestId = ui.id and ui.id = ? and ur.roomId = ri.id and ri.id=ho.id; 
     `;
-    const [selectUserTravelHistoryRow] = await connection.query(selectUserTravelHistoryQuery, userId);
+    const [selectUserTravelHistoryRow] = await connection.query(selectUserTravelHistoryQuery, userIdFromJWT);
     return selectUserTravelHistoryRow;
 }
 
@@ -43,7 +43,7 @@ async function checkReservation(connection, checkReservationParams) {
     return checkReservationRow; 
 }
 
-async function selectRejectReservation(connection, userId) {
+async function selectRejectReservation(connection, userIdFromJWT) {
   const selectRejectReservationQuery = `
   select case
 		    	when ur.status = 'REJECT' then '예약거절'
@@ -55,11 +55,11 @@ async function selectRejectReservation(connection, userId) {
   (select ri.id,ui.nickName from UserInfo ui join RoomInfo ri on ui.id = ri.hostId) ho
   where ui.id = ur.guestId and ur.roomId = ri.id and ui.id = ? and ur.status = 'REJECT' and ho.id = ri.id;
   `;
-  const [selectRejectReservationRow] = await connection.query(selectRejectReservationQuery,userId);
+  const [selectRejectReservationRow] = await connection.query(selectRejectReservationQuery, userIdFromJWT);
   return selectRejectReservationRow;
 }
 
-async function selectHostRoomReservation(connection,userId) {
+async function selectHostRoomReservation(connection, userIdFromJWT) {
   const selectHostRoomReservationQuery = `
   select ui.nickname as '게스트닉네임',
 	       ui.phoneNumber as '전화번호',
@@ -68,7 +68,7 @@ async function selectHostRoomReservation(connection,userId) {
   from UserInfo ui, RoomInfo ri, UserReservation ur
   where ur.roomId = ri.id and ur.guestId = ui.id and ri.hostId = ui.id and ui.id = ?;
   `;
-  const [selectHostRoomReservationRow] = await connection.query(selectHostRoomReservationQuery,userId);
+  const [selectHostRoomReservationRow] = await connection.query(selectHostRoomReservationQuery, userIdFromJWT);
   return selectHostRoomReservationRow;
 }
 module.exports = {

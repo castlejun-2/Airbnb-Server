@@ -1,4 +1,4 @@
-async function selectUserAlarm(connection, userId) {
+async function selectUserAlarm(connection, userIdFromJWT) {
     const selectAlarmQuery = `
         select ai.alarm as 알람,
         	case when TIMESTAMPDIFF(HOUR, ai.createdAt, current_timestamp()) < 24
@@ -9,16 +9,16 @@ async function selectUserAlarm(connection, userId) {
         where ui.id = ai.userId and ui.id = ? and ai.status = 'ACTIVE'
         order by ai.createdAt DESC
     `;
-    const [selectAlarmRow] = await connection.query(selectAlarmQuery, userId);
+    const [selectAlarmRow] = await connection.query(selectAlarmQuery, userIdFromJWT);
     return selectAlarmRow;
 }
-async function deleteMyAlarm(connection, userId, alarmId) {
+async function deleteMyAlarm(connection, userIdFromJWT, alarmId) {
     const deleteMyAlarmQuery = `
         UPDATE AlarmInfo
         SET status = 'DELETE'
         WHERE userId = ? and id = ?;
     `;
-    const [deleteMyAlarmRow] = await connection.query(deleteMyAlarmQuery, [userId, alarmId]);
+    const [deleteMyAlarmRow] = await connection.query(deleteMyAlarmQuery, [userIdFromJWT, alarmId]);
     return deleteMyAlarmRow;
 }
 module.exports = {

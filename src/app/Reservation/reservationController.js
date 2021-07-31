@@ -11,31 +11,25 @@ const { Console } = require("winston/lib/winston/transports");
 /**
  * API No. 2
  * API Name : 회원의 이전 여행 기록 및 여행 예정 조회 API
- * [GET] /app/travels/:userId
- * path variable : userId
+ * [GET] /app/travels
  */
  exports.getHistory = async function (req, res) {
-    const userId = req.params.userId;
 
-    if(!userId)
-       return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    const userIdFromJWT = req.verifiedToken.userId;
 
-    const historyResult = await reservationProvider.retrieveTravelHistory(userId);
+    const historyResult = await reservationProvider.retrieveTravelHistory(userIdFromJWT);
     return res.send(response(baseResponse.SUCCESS, historyResult));
 }
 
 /**
  * API No. 3
  * API Name : 여행 예약 API
- * [GET] /app/reservations/:userId
- * path variable : userId
+ * [GET] /app/reservations
  */
 exports.travelReservation = async function (req,res) {
-   const guestId = req.params.userId;
-   const {roomId,startDate,lastDate,guestNum,payment} = req.body;
 
-   if (!guestId)
-       return res.send(response(baseResponse.ROOM_HOSTID_EMPTY));
+   const userIdFromJWT = req.verifiedToken.userId;
+   const {roomId,startDate,lastDate,guestNum,payment} = req.body;
    
    if (!roomId)
        return res.send(response(baseResponse.ROOM_ROOMNAME_EMPTY));
@@ -53,7 +47,7 @@ exports.travelReservation = async function (req,res) {
        return res.send(response(baseResponse.USER_PAYMENT_EMPTY));
 
    const signUpResponse = await reservationService.signUpReservation(
-      guestId,roomId,startDate,lastDate,guestNum,payment
+      userIdFromJWT,roomId,startDate,lastDate,guestNum,payment
    );
    
    return res.send(response(baseResponse.SUCCESS, signUpResponse));
@@ -62,31 +56,25 @@ exports.travelReservation = async function (req,res) {
 /**
  * API No. 4
  * API Name : 거절된 예약 조회 API
- * [GET] /app/rejections/:userId
- * path variable : userId
+ * [GET] /app/rejections
  */
 exports.rejectReservation = async function (req,res) {
-   const userId = req.params.userId;
 
-   if (!userId)
-      return res.send(response(baseResponse.ROOM_HOSTID_EMPTY));
+   const userIdFromJWT = req.verifiedToken.userId;
 
-   const rejectByReservation = await reservationProvider.selectReject(userId);
+   const rejectByReservation = await reservationProvider.selectReject(userIdFromJWT);
    return res.send(response(baseResponse.SUCCESS, rejectByReservation));
 }
 
 /**
  * API No. 5
  * API Name : 자신의 숙소 예약 현황 조회 API
- * [GET] /app/hostreservations/:userId
- * path variable : userId
+ * [GET] /app/hostreservations
  */
 exports.hostReservation = async function (req,res) {
-   const userId = req.params.userId;
 
-   if (!userId)
-      return res.send(response(baseResponse.ROOM_HOSTID_EMPTY));
+   const userIdFromJWT = req.verifiedToken.userId;
 
-   const hostReservation = await reservationProvider.selectHostReservation(userId);
+   const hostReservation = await reservationProvider.selectHostReservation(userIdFromJWT);
    return res.send(response(baseResponse.SUCCESS, hostReservation));
 }

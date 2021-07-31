@@ -5,9 +5,9 @@ const {response, errResponse} = require("../../../config/response");
 const reservationDao = require("./reservationDao");
 const { Console } = require("winston/lib/winston/transports");
 
-exports.retrieveTravelHistory = async function (userId) {
+exports.retrieveTravelHistory = async function (userIdFromJWT) {
     const connection = await pool.getConnection(async (conn) => conn);
-    const userTravelHistoryResult = await reservationDao.selectUserTravelHistory(connection, userId);
+    const userTravelHistoryResult = await reservationDao.selectUserTravelHistory(connection, userIdFromJWT);
     connection.release();
     
     return userTravelHistoryResult;
@@ -21,17 +21,17 @@ exports.reservationCheck = async function (checkReservationParams) {
     return reservationCheckResult[0];
 };
 
-exports.selectReject = async function (userId) {
+exports.selectReject = async function (userIdFromJWT) {
     const connection = await pool.getConnection(async (conn) => conn);
-    const rejectReservationResult = await reservationDao.selectRejectReservation(connection, userId);
+    const rejectReservationResult = await reservationDao.selectRejectReservation(connection, userIdFromJWT);
     connection.release(); 
 
     return rejectReservationResult;
 }
 
-exports.selectHostReservation = async function (userId) {
+exports.selectHostReservation = async function (userIdFromJWT) {
     const connection = await pool.getConnection(async (conn) => conn);
-    const hostReservationResult = await reservationDao.selectHostRoomReservation(connection, userId);
+    const hostReservationResult = await reservationDao.selectHostRoomReservation(connection, userIdFromJWT);
     connection.release();
 
     return hostReservationResult;

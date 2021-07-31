@@ -96,11 +96,11 @@ exports.postSignIn = async function (emailAddress, passwd) {
     }
 };
 
-exports.editUser = async function (userId, lastName, firstName, gender, birthday, emailAddress, phoneNumber) {
+exports.editUser = async function (userIdFromJWT, lastName, firstName, gender, birthday, emailAddress, phoneNumber) {
     try {
         console.log('Edit Id:', userId);
         const connection = await pool.getConnection(async (conn) => conn);
-        const selectUserPasswordParams = [lastName, firstName, gender, birthday, emailAddress, phoneNumber, userId];
+        const selectUserPasswordParams = [lastName, firstName, gender, birthday, emailAddress, phoneNumber, userIdFromJWT];
         const editUserResult = await userDao.updateUserInfo(connection, selectUserPasswordParams);
         connection.release();
 

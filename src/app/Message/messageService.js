@@ -11,10 +11,10 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const {connect} = require("http2");
 
-exports.deleteAlarm = async function (userId, alarmId) {
+exports.deleteAlarm = async function (userIdFromJWT, alarmId) {
     try {  
         const connection = await pool.getConnection(async (conn) => conn);
-        const deleteAlarmResult = await messageDao.deleteMyAlarm(connection, userId, alarmId);
+        const deleteAlarmResult = await messageDao.deleteMyAlarm(connection, userIdFromJWT, alarmId);
         connection.release();
 
         return response(baseResponse.SUCCESS);

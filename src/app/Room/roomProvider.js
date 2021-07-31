@@ -44,9 +44,9 @@ exports.retrieveRoomRule = async function (roomId) {
   return rulesResult[0];
 };
 
-exports.retrieveMyRoom = async function (userId) {
+exports.retrieveMyRoom = async function (userIdFromJWT) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const myRoomResult = await roomDao.selectMyRoom(connection, userId);
+  const myRoomResult = await roomDao.selectMyRoom(connection, userIdFromJWT);
   
   connection.release();
 

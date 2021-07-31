@@ -11,37 +11,30 @@ const { Console } = require("winston/lib/winston/transports");
 /**
  * API No. 1
  * API Name : 회원의 알람 조회 API
- * [GET] /app/alarms/:userId
- * path variable : userId
+ * [GET] /app/alarms
  */
  exports.getAlarm = async function (req, res) {
-    const userId = req.params.userId;
 
-    if(!userId)
-       return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    const userIdFromJWT = req.verifiedToken.userId;
 
-    const alarmResult = await messageProvider.retrieveAlarm(userId);
+    const alarmResult = await messageProvider.retrieveAlarm(userIdFromJWT);
     return res.send(alarmResult,baseResponse.SUCCESS);
 }
 
 /**
  * API No. 13
  * API Name : 알람 삭제 API
- * [POST] /app/alarms/:userId/withdrawal
- * path variable : userId
+ * [POST] /app/alarms/withdrawal
  * body : alarmId
  */
  exports.deleteAlarm = async function (req, res) {
 
-   const userId = req.params.userId;
+   const userIdFromJWT = req.verifiedToken.userId;
    const alarmId = req.body.alarmId;
-
-   if(!userId)
-      return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
    if(!alarmId)
       return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
    
-   const deleteAlarmInfo = await messageService.deleteAlarm(userId,alarmId);
+   const deleteAlarmInfo = await messageService.deleteAlarm(userIdFromJWT, alarmId);
        return res.send(deleteAlarmInfo);
 }
