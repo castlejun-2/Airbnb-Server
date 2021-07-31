@@ -1,5 +1,6 @@
 .idea/*
 node_modules/*
 package-lock.json
+README.md
 log/*
 .DS_Store
