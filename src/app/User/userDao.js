@@ -72,16 +72,18 @@ async function selectUserAccount(connection, emailAddress) {
   return selectUserAccountRow[0];
 }
 
-async function updateUserInfo(connection, selectUserPasswordParams) {
+//회원 정보 수정
+async function updateUserInfo(connection, selectUserParams) {
   const updateUserQuery = `
         UPDATE UserInfo 
         SET lastName = ?, firstName = ?, gender = ?, birthday = ?, emailAddress = ?, phoneNumber = ?
         WHERE id = ?;
   `;
-  const updateUserRow = await connection.query(updateUserQuery, selectUserPasswordParams);
+  const updateUserRow = await connection.query(updateUserQuery, selectUserParams);
   return updateUserRow[0];
 }
 
+//회원 삭제
 async function deleteUserInfo(connection, userId) {
   const selectUserQuery = `
         SELECT emailAddress
@@ -98,6 +100,17 @@ async function deleteUserInfo(connection, userId) {
   return selectUserRow[0];
 }
 
+//회원 정보 수정
+async function updateUserProfileInfo(connection, selectUserParams) {
+  const updateUserQuery = `
+        UPDATE UserInfo 
+        SET introduction = ?, address = ?, job = ?, language = ?
+        WHERE id = ?;
+  `;
+  const updateUserRow = await connection.query(updateUserQuery, selectUserParams);
+  return updateUserRow[0];
+}
+
 module.exports = {
   selectUser,
   selectUserEmail,
@@ -106,5 +119,6 @@ module.exports = {
   selectUserPassword,
   selectUserAccount,
   updateUserInfo,
-  deleteUserInfo
+  deleteUserInfo,
+  updateUserProfileInfo
 };

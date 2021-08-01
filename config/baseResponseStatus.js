@@ -4,6 +4,8 @@ module.exports = {
     SUCCESS : { "isSuccess": true, "code": 1000, "message":"성공" },
     // Common
     TOKEN_EMPTY : { "isSuccess": false, "code": 2000, "message":"JWT 토큰을 입력해주세요." },
+    ACCESS_TOKEN_EMPTY : { "isSuccess": false, "code": 2020, "message":"ACCESS TOKEN을 입력해주세요." },
+    ACCESS_TOKEN_VERIFICATION_FAILURE : { "isSuccess": false, "code": 3001, "message":"ACCESS TOKEN 검증 실패" },
     TOKEN_VERIFICATION_FAILURE : { "isSuccess": false, "code": 3000, "message":"JWT 토큰 검증 실패" },
     TOKEN_VERIFICATION_SUCCESS : { "isSuccess": true, "code": 1001, "message":"JWT 토큰 검증 성공" }, // ?
 

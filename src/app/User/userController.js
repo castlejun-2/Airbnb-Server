@@ -1,4 +1,7 @@
+const {logger} = require("../../../config/winston");
 const jwtMiddleware = require("../../../config/jwtMiddleware");
+const jwt = require('jsonwebtoken');
+const secret_config = require('../../../config/secret');
 const userProvider = require("../../app/User/userProvider");
 const userService = require("../../app/User/userService");
 const baseResponse = require("../../../config/baseResponseStatus");
@@ -7,6 +10,9 @@ const {response, errResponse} = require("../../../config/response");
 const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
 const { Console } = require("winston/lib/winston/transports");
+const passport = require('passport');
+const axios = require('axios');
+
 
 /**
  * API No. 12
@@ -110,6 +116,7 @@ exports.patchUsers = async function (req, res) {
     const editUserInfo = await userService.editUser(userIdFromJWT, lastName, firstName, gender, birthday, emailAddress, phoneNumber);
     return res.send(editUserInfo);   
 };
+
 /**
  * API No. 17
  * API Name : 회원 탈퇴 API
@@ -122,6 +129,77 @@ exports.patchUsers = async function (req, res) {
     const deleteUserInfo = await userService.deleteUser(userIdFromJWT);
         return res.send(deleteUserInfo);
  }
+
+ /**
+ * API No. 23
+ * API Name : 카카오 로그인 API
+ * [POST] /app/users/kakao-login
+ */
+exports.kakaoLogin = async function (req, res){
+
+    const {accessToken} = req.body; //값 확인을 위해 body로 token 값을 받아준다.
+    if(!accessToken)
+        return res.send(errResponse(baseResponse.ACCESS_TOKEN_EMPTY));
+
+    try{
+        let kakaoProfile; //값을 수정해주어야 하므로 const가 아닌 let 사용
+
+        try{ //axios 모듈을 이용하여 Profile 정보를 가져온다.
+            kakaoProfile = await axios.get('https://kapi.kakao.com/v2/user/me', {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+        } catch (err) {
+            return res.send(errResponse(baseResponse.ACCESS_TOKEN_VERIFICATION_FAILURE));
+        }
+    const data = kakaoProfile.data.kakao_account;
+    const name = data.profile.nickname;
+    const email = data.email;
+    const emailResult = await userProvider.emailCheck(email);
+
+    if(emailResult[0]){ //유저를 확인 후 알림메시지와 함께 jwt token을 생성하여 client에게 전송
+
+        let token = await jwt.sign ({
+            userIdx : emailResult[0].id
+        },
+        secret_config.jwtsecret,
+        {
+            expiresIn : "365d",
+            subject : "userInfo",
+        }
+        );
+        return res.send(response(baseResponse.SUCCESS, {'userIdx' : emailResult[0].id, 'jwt' : token, 'message' : '소셜로그인 성공.'}));
+    }
+    else{
+        const result = {
+            name : name,
+            email : email
+        }
+        return res.send(response(baseResponse.SUCCESS, {message : '회원가입이 가능 Email.', result}));
+    }} catch (err){
+        logger.error(`App - socialLogin Service error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+/**
+ * API No. 24
+ * API Name : 회원 프로필 수정 API
+ * [POST] /app/users/kakao-login
+ */
+exports.patchUsersProfile = async function (req, res) {
+
+    const userIdFromJWT = req.verifiedToken.userId;
+    const introduction = req.body.introduction;
+    const address = req.body.address;
+    const job = req.body.job;
+    const language = req.body.language;
+
+    const editUserProfileInfo = await userService.editUserProfile(userIdFromJWT, introduction, address, job, language);
+    return res.send(editUserProfileInfo);   
+};
 
 /** JWT 토큰 검증 API
  * [GET] /app/auto-login

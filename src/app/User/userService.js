@@ -96,12 +96,13 @@ exports.postSignIn = async function (emailAddress, passwd) {
     }
 };
 
+//회원 정보 수정
 exports.editUser = async function (userIdFromJWT, lastName, firstName, gender, birthday, emailAddress, phoneNumber) {
     try {
         console.log('Edit Id:', userId);
         const connection = await pool.getConnection(async (conn) => conn);
-        const selectUserPasswordParams = [lastName, firstName, gender, birthday, emailAddress, phoneNumber, userIdFromJWT];
-        const editUserResult = await userDao.updateUserInfo(connection, selectUserPasswordParams);
+        const selectUserParams = [lastName, firstName, gender, birthday, emailAddress, phoneNumber, userIdFromJWT];
+        const editUserResult = await userDao.updateUserInfo(connection, selectUserParams);
         connection.release();
 
         return response(baseResponse.SUCCESS);
@@ -112,6 +113,7 @@ exports.editUser = async function (userIdFromJWT, lastName, firstName, gender, b
     }
 }
 
+//회원 비활성화
 exports.deleteUser = async function (userId) {
     try {  
         console.log('Delete Id: ',userId);
@@ -124,4 +126,21 @@ exports.deleteUser = async function (userId) {
         logger.error(`App - editUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
+}
+
+//회원 프로필 수정
+exports.editUser = async function (userIdFromJWT, introduction, address, job, language) {
+    try {
+        console.log('Edit Id:', userIdFromJWT);
+        const connection = await pool.getConnection(async (conn) => conn);
+        const selectUserParams = [introduction, address, job, language, userIdFromJWT];
+        const editUserResult = await userDao.updateUserProfileInfo(connection, selectUserParams);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - editUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }    
 }
