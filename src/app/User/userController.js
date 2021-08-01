@@ -192,12 +192,13 @@ exports.kakaoLogin = async function (req, res){
 exports.patchUsersProfile = async function (req, res) {
 
     const userIdFromJWT = req.verifiedToken.userId;
+    const userImageUrl = req.body.userImageUrl;
     const introduction = req.body.introduction;
     const address = req.body.address;
     const job = req.body.job;
     const language = req.body.language;
 
-    const editUserProfileInfo = await userService.editUserProfile(userIdFromJWT, introduction, address, job, language);
+    const editUserProfileInfo = await userService.editUserProfile(userIdFromJWT, userImageUrl, introduction, address, job, language);
     return res.send(editUserProfileInfo);   
 };
 

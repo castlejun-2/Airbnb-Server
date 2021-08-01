@@ -104,7 +104,7 @@ async function deleteUserInfo(connection, userId) {
 async function updateUserProfileInfo(connection, selectUserParams) {
   const updateUserQuery = `
         UPDATE UserInfo 
-        SET introduction = ?, address = ?, job = ?, language = ?
+        SET userImageUrl = ?, introduction = ?, address = ?, job = ?, language = ?
         WHERE id = ?;
   `;
   const updateUserRow = await connection.query(updateUserQuery, selectUserParams);

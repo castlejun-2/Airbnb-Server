@@ -129,11 +129,11 @@ exports.deleteUser = async function (userId) {
 }
 
 //회원 프로필 수정
-exports.editUser = async function (userIdFromJWT, introduction, address, job, language) {
+exports.editUserProfile = async function (userIdFromJWT, userImageUrl, introduction, address, job, language) {
     try {
         console.log('Edit Id:', userIdFromJWT);
         const connection = await pool.getConnection(async (conn) => conn);
-        const selectUserParams = [introduction, address, job, language, userIdFromJWT];
+        const selectUserParams = [userImageUrl, introduction, address, job, language, userIdFromJWT];
         const editUserResult = await userDao.updateUserProfileInfo(connection, selectUserParams);
         connection.release();
 
