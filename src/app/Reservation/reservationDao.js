@@ -9,11 +9,10 @@ async function selectUserTravelHistory(connection, userIdFromJWT) {
            ri.country as '나라',
            ri.city as '도시',
            ho.nickName as '숙소 Host',
-           ur.startDate as '시작일자',
-           ur.lastDate as '종료일자'
-          from UserInfo ui,UserReservation ur,RoomInfo ri,
-          (select ri.id,ui.nickName from UserInfo ui join RoomInfo ri on ui.id=ri.hostId) ho
-          where ur.guestId = ui.id and ui.id = ? and ur.roomId = ri.id and ri.id=ho.id; 
+           concat(date_format(ur.startDate,'%Y년 %m월 %d일'),'~',date_format(ur.lastDate,'%Y년 %m월 %d일')) as '여행일자'
+    from UserInfo ui,UserReservation ur,RoomInfo ri,
+         (select ri.id,ui.nickName from UserInfo ui join RoomInfo ri on ui.id=ri.hostId) ho
+    where ur.guestId = ui.id and ui.id = ? and ur.roomId = ri.id and ri.id=ho.id; 
     `;
     const [selectUserTravelHistoryRow] = await connection.query(selectUserTravelHistoryQuery, userIdFromJWT);
     return selectUserTravelHistoryRow;
@@ -36,8 +35,8 @@ async function checkReservation(connection, checkReservationParams) {
   const checkReservationQuery = `
   SELECT ur.id
   FROM UserReservation ur join RoomInfo ri on ur.roomId=ri.id and ri.id = ?
-  WHERE (ur.startDate < ? and ? < ur.lastDate)
-  or (ur.startDate < ? and ? < ur.lastDate);
+  WHERE (ur.startDate <= ? and ? <= ur.lastDate)
+  or (ur.startDate <= ? and ? <= ur.lastDate);
   `;
   const [checkReservationRow] = await connection.query(checkReservationQuery, checkReservationParams);
     return checkReservationRow; 
@@ -89,7 +88,7 @@ async function selectLastReservation(connection, userIdFromJWT, reservationId) {
 	  join RoomInfo ri on ri.id = ur.roomId
 	  join UserInfo ui on ui.id = ri.hostId
     join RoomRules rr on rr.roomId = ri.id
-  Where ur.guestId = ? and ur.id = ?;
+  Where ur.guestId = ? and ur.id = ? and ur.status = 'ACTIVE';
   `;
   const [selectLastReservationRow] = await connection.query(selectLastReservationQuery, [userIdFromJWT, reservationId]);
   return selectLastReservationRow;

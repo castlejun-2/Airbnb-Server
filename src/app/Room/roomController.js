@@ -161,7 +161,7 @@ exports.deleteRoom = async function (req, res) {
  exports.updateTitle = async function (req,res) {
 
     const roomId = req.params.roomid;
-    const updateName = req.body;
+    const updateName = req.body.updateName;
 
     if (!roomId)
         return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));

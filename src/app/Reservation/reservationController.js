@@ -23,8 +23,8 @@ const { Console } = require("winston/lib/winston/transports");
 
 /**
  * API No. 3
- * API Name : 여행 예약 API
- * [GET] /app/reservations
+ * API Name : 여행 예약 API (회원용)
+ * [POST] /app/reservations
  */
 exports.travelReservation = async function (req,res) {
 
@@ -86,7 +86,7 @@ exports.hostReservation = async function (req,res) {
  */
  exports.lastReservation = async function (req,res) {
 
-    const userIdFromJWT = req.body.userId;
+    const userIdFromJWT = req.verifiedToken.userId;
     const reservationId = req.params.reservationid;
 
     if (!reservationId)

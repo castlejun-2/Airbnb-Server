@@ -17,14 +17,15 @@ exports.reservationCheck = async function (checkReservationParams) {
     const connection = await pool.getConnection(async (conn) => conn);
     const reservationCheckResult = await reservationDao.checkReservation(connection, checkReservationParams);
     connection.release();
-  
+    console.log(reservationCheckResult);
+    console.log(reservationCheckResult[0]);
     return reservationCheckResult[0];
 };
 
 exports.selectReject = async function (userIdFromJWT) {
     const connection = await pool.getConnection(async (conn) => conn);
     const rejectReservationResult = await reservationDao.selectRejectReservation(connection, userIdFromJWT);
-    connection.release(); 
+    connection.release();
 
     return rejectReservationResult;
 }

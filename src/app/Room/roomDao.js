@@ -70,11 +70,13 @@ async function selectMyRoom(connection, userIdFromJWT) {
 	             case
 			            when ri.status='ACTIVE' then '운영 중'
 			            when ri.status='REGISTER' then '등록 중'
+                  when ri.status='STOP' then '운영 정지'
+                  when ri.status='REST' then '휴식 모드'
                end as '운영 상태',
                ri.roomImageURL as '숙소 사진',
                ri.name as '숙소 이름'
         from RoomInfo ri,UserInfo ui
-        where ri.hostId = ui.id and ui.id = ?;
+        where ri.hostId = ui.id and ui.id = ? and ri.status != 'DELETE';
   `;
   const [selectMyRoomRow] = await connection.query(selectMyRoomQuery, userIdFromJWT);
   return selectMyRoomRow;

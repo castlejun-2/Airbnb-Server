@@ -16,7 +16,7 @@ const {connect} = require("http2");
 exports.createRoom = async function (userIdFromJWT, typeId, roomTypePlusId, name, description, roomImageUrl, country, city, detailAddress, email, price, checkIn, checkOut, facility, bed, bathrooms, roomNumber, guestNumber) {
     try {
         // 이메일 중복 확인
-        const emailRows = await roomProvider.emailCheck(emailAddress);
+        const emailRows = await roomProvider.emailCheck(email);
         if (emailRows.length > 0)
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
 

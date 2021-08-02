@@ -5,7 +5,7 @@ module.exports = function(app){
     // 2. 회원의 이전 예약 기록 및 여행 예정 조회 미리보기 API
     app.get('/app/travels', jwtMiddleware, reservation.getHistory);
 
-    // 3. 여행 예약 API
+    // 3. 여행 예약 API (회원용)
     app.post('/app/reservations', jwtMiddleware, reservation.travelReservation);
 
     // 4. 거절된 예약 조회 API
