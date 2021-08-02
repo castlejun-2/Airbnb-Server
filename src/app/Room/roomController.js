@@ -16,7 +16,7 @@ const {emit} = require("nodemon");
 
     const userIdFromJWT = req.verifiedToken.userId;
     /**
-     * Body: typeId,name,description,roomImageUrl,Country,City,email,price,checkIn,checkOut,bed,bathrooms,roomNumber,guestNumber
+     * Body: typeId,name,description,roomImageUrl,Country,City,detailAddress,email,price,checkIn,checkOut,facility,bed,bathrooms,roomNumber,guestNumber
      */
     const {typeId, roomTypePlusId, name, description, roomImageUrl, country, city, detailAddress, email, price, checkIn, checkOut, facility, bed, bathrooms, roomNumber, guestNumber} = req.body;
 
@@ -106,16 +106,16 @@ exports.getRooms = async function (req, res) {
 /**
  * API No. 9
  * API Name : 숙소 규칙 조회 API (+국가를 통한 조회)
- * [GET] /app/roomrule/:roomId
+ * [GET] /app/room-rules/:roomid
  */
 exports.getRoomRules = async function (req, res) {
 
     /**
-     * Path Variable: roomId
+     * Path Variable: roomid
      */
-    const roomId = req.params.roomId;
+    const roomId = req.params.roomid;
 
-    if (!roomName) 
+    if (!roomId) 
         return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
     
     const roomRules = await roomProvider.retrieveRoomRule(roomId);
@@ -125,7 +125,7 @@ exports.getRoomRules = async function (req, res) {
 /**
  * API No. 10
  * API Name : 자신이 등록한 숙소 조회 API
- * [GET] /app/hostrooms
+ * [GET] /app/host-rooms
  */
 exports.getMyRoom = async function (req, res) {
     
@@ -138,12 +138,12 @@ exports.getMyRoom = async function (req, res) {
 /**
  * API No. 11
  * API Name : 숙소 상태 변경 API (삭제))
- * [PATCH] /app/rooms/:roomId/withdrawal
+ * [PATCH] /app/rooms/:roomid/withdrawal
  */
 exports.deleteRoom = async function (req, res) {
 
     const userIdFromJWT = req.verifiedToken.userId;
-    const roomId = req.params.roomName;
+    const roomId = req.params.roomid;
 
     if (!roomId)
         return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
@@ -154,14 +154,34 @@ exports.deleteRoom = async function (req, res) {
 };
 
 /**
+ * API No. 14
+ * API Name : 숙소 정보 변경 API (이름)
+ * [PATCH] /app/rooms/:roomid/title
+ */
+ exports.updateTitle = async function (req,res) {
+
+    const roomId = req.params.roomid;
+    const updateName = req.body;
+
+    if (!roomId)
+        return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
+
+    if (!updateName)
+        return res.send(errResponse(baseResponse.SINGUP_UPDATEROOMNAME_EMPTY));
+
+    const editRoomName = await roomService.editRoomTitle(roomId, updateName);
+    return res.send(editRoomName);
+}
+
+/**
  * API No. 21
  * API Name : 숙소 상태 변경 API (운영정지)
- * [PATCH] /app/rooms/:roomId/stop
+ * [PATCH] /app/rooms/:roomid/stop
  */
  exports.stopRoom = async function (req, res) {
 
     const userIdFromJWT = req.verifiedToken.userId;
-    const roomId = req.params.roomName;
+    const roomId = req.params.roomid;
 
     if (!roomId)
         return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
@@ -174,12 +194,12 @@ exports.deleteRoom = async function (req, res) {
 /**
  * API No. 22
  * API Name : 숙소 상태 변경 API (휴식모드)
- * [PATCH] /app/rooms/:roomId/rest
+ * [PATCH] /app/rooms/:roomid/rest
  */
  exports.restRoom = async function (req, res) {
 
     const userIdFromJWT = req.verifiedToken.userId;
-    const roomId = req.params.roomName;
+    const roomId = req.params.roomid;
 
     if (!roomId)
         return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
@@ -189,17 +209,3 @@ exports.deleteRoom = async function (req, res) {
     
 };
 
-exports.updateTitle = async function (req,res) {
-
-    const roomName = req.params.roomName;
-    const updateName = req.body;
-
-    if (!roomName)
-        return res.send(errResponse(baseResponse.SIGNUP_ROOMNAME_EMPTY));
-
-    if (!updateName)
-        return res.send(errResponse(baseResponse.SINGUP_UPDATEROOMNAME_EMPTY));
-
-    const editRoomName = await roomService.editRoomTitle(roomName, updateName);
-    return res.send(editRoomName);
-}

@@ -43,6 +43,7 @@ module.exports = {
     ROOM_ROOMDETAILADDRESS_EMPTY : { "isSuccess:": false, "code": 5044, "message":"숙소의 세부 주소를 입력해주세요."},
     ROOM_ROOMPRICE_EMPTY : { "isSuccess": false, "code": 5019, "message": "방이 가격을 입력해주세요." },
     ROOM_ROOMGUESTNUMBER_EMPTY : { "isSuccess": false, "code": 5020, "message": "방의 최대 인원을 입력해주세요." },
+    RESERVATION_ID_EMPTY : { "isSuccess": false, "code": 5045, "message": "예약 번호를 입력해주세요." },
     RESERVATION_STARTDATE_EMPTY : { "isSuccess": false, "code": 5034, "message": "여행 시작 일자를 입력해주세요." },
     RESERVATION_LASTDATE_EMPTY : { "isSuccess": false, "code": 5035, "message": "여행 종료 일자를 입력해주세요." },
     RESERVATION_GUESTNUM_EMPTY : { "isSuccess": false, "code": 5036, "message": "숙소 이용 인원을 입력해주세요." },

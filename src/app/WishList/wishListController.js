@@ -11,7 +11,7 @@ const { Console } = require("winston/lib/winston/transports");
 /**
  * API No. 18
  * API Name : 회원 위시리스트 추가 API
- * [POST] /app/users/add-WishLists
+ * [POST] /app/users/add-Wishlists
  * body : listName
  */
  exports.postWishList = async function (req, res) {
@@ -29,7 +29,7 @@ const { Console } = require("winston/lib/winston/transports");
 /**
  * API No. 19
  * API Name : 회원 위시리스트 목록 조회 API
- * [GET] /app/users/WishLists
+ * [GET] /app/users/Wishlists
  */
 exports.getWishList = async function (req, res) {
 
@@ -42,7 +42,7 @@ exports.getWishList = async function (req, res) {
 /**
  * API No. 20
  * API Name : 회원 위시리스트 목록 속 방 조회 API
- * [GET] /app/WishListContents
+ * [GET] /app/users/wishlists/contents
  * parameter : listname
  */
 exports.getListContent = async function (req, res) {

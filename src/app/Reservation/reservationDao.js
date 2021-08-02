@@ -1,12 +1,12 @@
 async function selectUserTravelHistory(connection, userIdFromJWT) {
     const selectUserTravelHistoryQuery = `
     select case
-                  when startDate > CURRENT_DATE
+              when startDate > CURRENT_DATE
                     then '예정된 여행'
                     else '이전 여행지'
-              end as 구분,
-             ri.roomImageUrl as '숙소사진',
-             ri.country as '나라',
+           end as 구분,
+           ri.roomImageUrl as '숙소사진',
+           ri.country as '나라',
            ri.city as '도시',
            ho.nickName as '숙소 Host',
            ur.startDate as '시작일자',
@@ -71,10 +71,34 @@ async function selectHostRoomReservation(connection, userIdFromJWT) {
   const [selectHostRoomReservationRow] = await connection.query(selectHostRoomReservationQuery, userIdFromJWT);
   return selectHostRoomReservationRow;
 }
+
+async function selectLastReservation(connection, userIdFromJWT, reservationId) {
+  const selectLastReservationQuery = `
+  select ui.nickname as 'Host 닉네임',
+	     ri.roomImageUrl as '숙소 Url',
+       ri.name as '숙소 이름',
+       ri.description as '숙소 소개',
+       ri.price as '숙소 가격',
+       rr.rules as '숙소 이용규칙',
+       date_format(ur.startDate,'%Y년 %m월 %d일') as '여행 시작일',
+       date_format(ur.lastDate,'%Y년 %m월 %d일') as '여행 종료일',
+       concat(ur.guestNum,'명') as '게스트', 
+       ur.id as '예약 번호',
+       concat(ri.detailAddress,',',ri.city,',',ri.country) as '주소'
+  From UserReservation ur
+	  join RoomInfo ri on ri.id = ur.roomId
+	  join UserInfo ui on ui.id = ri.hostId
+    join RoomRules rr on rr.roomId = ri.id
+  Where ur.guestId = ? and ur.id = ?;
+  `;
+  const [selectLastReservationRow] = await connection.query(selectLastReservationQuery, [userIdFromJWT, reservationId]);
+  return selectLastReservationRow;
+}
 module.exports = {
     selectUserTravelHistory,
     insertReservation,
     checkReservation,
     selectRejectReservation,
-    selectHostRoomReservation
+    selectHostRoomReservation,
+    selectLastReservation
 }

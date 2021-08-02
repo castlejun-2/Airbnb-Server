@@ -36,3 +36,11 @@ exports.selectHostReservation = async function (userIdFromJWT) {
 
     return hostReservationResult;
 }
+
+exports.selectLastReservation = async function (userIdFromJWT,reservationId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const lastReservationResult = await reservationDao.selectLastReservation(connection, userIdFromJWT, reservationId);
+    connection.release();
+
+    return lastReservationResult;
+}

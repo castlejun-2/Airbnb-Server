@@ -82,7 +82,7 @@ exports.login = async function (req, res) {
 /**
  * API No. 16
  * API Name : 회원 정보 수정 API + JWT + Validation
- * [PATCH] /app/users/profile
+ * [PATCH] /app/users/personal-information
  * body : nickname
  */
 exports.patchUsers = async function (req, res) {
@@ -187,7 +187,7 @@ exports.kakaoLogin = async function (req, res){
 /**
  * API No. 24
  * API Name : 회원 프로필 수정 API
- * [POST] /app/users/kakao-login
+ * [PATCH] /app/users/profile
  */
 exports.patchUsersProfile = async function (req, res) {
 

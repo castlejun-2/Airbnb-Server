@@ -81,11 +81,11 @@ exports.editRestRoom = async function (userIdFromJWT, roomId) {
     }
 };
 
-exports.editRoomTitle = async function (roomName, updateName) {
+exports.editRoomTitle = async function (roomId, updateName) {
     try {
-        console.log('Edit Room Name:', roomName);
+        console.log('Edit Room Name:', roomId);
         const connection = await pool.getConnection(async (conn) => conn);
-        const editRoomTitleResult = await roomDao.updateRoomTitle(connection, roomName, updateName);
+        const editRoomTitleResult = await roomDao.updateRoomTitle(connection, roomId, updateName);
         connection.release();
 
         return response(baseResponse.SUCCESS);

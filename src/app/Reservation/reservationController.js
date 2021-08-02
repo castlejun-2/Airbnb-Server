@@ -10,7 +10,7 @@ const { Console } = require("winston/lib/winston/transports");
 
 /**
  * API No. 2
- * API Name : 회원의 이전 여행 기록 및 여행 예정 조회 API
+ * API Name : 회원의 이전 여행 기록 및 여행 예정 조회 미리보기 API
  * [GET] /app/travels
  */
  exports.getHistory = async function (req, res) {
@@ -78,3 +78,20 @@ exports.hostReservation = async function (req,res) {
    const hostReservation = await reservationProvider.selectHostReservation(userIdFromJWT);
    return res.send(response(baseResponse.SUCCESS, hostReservation));
 }
+
+/**
+ * API No. 25
+ * API Name : 이전 예약 숙소 세부정보 확인 API
+ * [GET] /app/last-reservation/:reservationid
+ */
+ exports.lastReservation = async function (req,res) {
+
+    const userIdFromJWT = req.body.userId;
+    const reservationId = req.params.reservationid;
+
+    if (!reservationId)
+        return res.send(response(baseResponse.RESERVATION_ID_EMPTY));
+
+    const lastReservationResult = await reservationProvider.selectLastReservation(userIdFromJWT, reservationId);
+    return res.send(response(baseResponse.SUCCESS, lastReservationResult));
+ }
