@@ -6,7 +6,7 @@ const pool = mysql.createPool({
     host: '', //RDS 서버 End point 설정
     user: '', //user의 계정명
     port: '3306',
-    password: '', //고유 password
+    password: '', //DB Server password
     database: 'milli' //database schema
 });
 
