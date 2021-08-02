@@ -20,8 +20,8 @@ module.exports = function(app){
         'kakao-login',
         new KakaoStrategy(
             {
-                clientID: '324943b63ca3487466369bb73ca4cc50',
-                clientSecret: 'zC1EX3qnAqK9HGYGzTuTku8Klcn8bxR2',
+                clientID: '',
+                clientSecret: '',
                 callbackURL: '/auth/kakao/callback',
             },
             function (accessToken, refreshToken, profile, done) {
