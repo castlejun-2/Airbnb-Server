@@ -10,8 +10,8 @@ async function selectRoom(connection) {
 // 방 생성
 async function insertRoomInfo(connection, insertRoomInfoParams) {
   const insertRoomInfoQuery = `
-        INSERT INTO RoomInfo(hostId, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, beds, bathrooms, roomNumber, guestNumber)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO RoomInfo(hostId, typeId, roomTypePlusId, name, description, roomImageUrl, country, city, detailAddress, emailAddress, price, checkIn, checkOut, facility, beds, bathrooms, roomNumber, guestNumber)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
   const insertRoomInfoRow = await connection.query(
     insertRoomInfoQuery,

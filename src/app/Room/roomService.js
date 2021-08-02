@@ -13,14 +13,14 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createRoom = async function (userIdFromJWT, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber) {
+exports.createRoom = async function (userIdFromJWT, typeId, roomTypePlusId, name, description, roomImageUrl, country, city, detailAddress, email, price, checkIn, checkOut, facility, bed, bathrooms, roomNumber, guestNumber) {
     try {
         // 이메일 중복 확인
         const emailRows = await roomProvider.emailCheck(emailAddress);
         if (emailRows.length > 0)
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
 
-        const insertRoomInfoParams = [userIdFromJWT, typeId, name, description, roomImageUrl, country, city, emailAddress, price, checkIn, checkOut, bed, bathrooms, roomNumber, geustNumber];
+        const insertRoomInfoParams = [userIdFromJWT, typeId, roomTypePlusId, name, description, roomImageUrl, country, city, detailAddress, email, price, checkIn, checkOut, facility, bed, bathrooms, roomNumber, guestNumber];
 
         const connection = await pool.getConnection(async (conn) => conn);
 

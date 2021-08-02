@@ -9,7 +9,7 @@ const {emit} = require("nodemon");
 
 /**
  * API No. 6
- * API Name : 숙소 생성 (회원가입) API
+ * API Name : 숙소 생성 API
  * [POST] /app/rooms
  */
  exports.postRooms = async function (req, res) {
@@ -18,7 +18,7 @@ const {emit} = require("nodemon");
     /**
      * Body: typeId,name,description,roomImageUrl,Country,City,email,price,checkIn,checkOut,bed,bathrooms,roomNumber,guestNumber
      */
-    const {typeId, name, description, roomImageUrl, country, city, email, price, checkIn, checkOut, bed, bathrooms, roomNumber, guestNumber} = req.body;
+    const {typeId, roomTypePlusId, name, description, roomImageUrl, country, city, detailAddress, email, price, checkIn, checkOut, facility, bed, bathrooms, roomNumber, guestNumber} = req.body;
 
     // 방의 종류 빈 값 체크
     if (!typeId)
@@ -35,6 +35,10 @@ const {emit} = require("nodemon");
     // 방 도시 빈 값 체크
     if (!city)
         return res.send(response(baseResponse.ROOM_ROOMCITY_EMPTY));    
+
+    // 세부 주소 체크
+    if (!detailAddress)
+        return res.send(response(baseResponse.ROOM_ROOMDETAILADDRESS_EMPTY));    
 
     // 길이 체크
     if (email.length > 30)
@@ -53,7 +57,7 @@ const {emit} = require("nodemon");
         return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
 
     const signUpResponse = await roomService.createRoom(
-        userIdFromJWT, typeId, name, description, roomImageUrl, country, city, email, price, checkIn, checkOut, bed, bathrooms, roomNumber, guestNumber
+        userIdFromJWT, typeId, roomTypePlusId, name, description, roomImageUrl, country, city, detailAddress, email, price, checkIn, checkOut, facility, bed, bathrooms, roomNumber, guestNumber
     );
 
     return res.send(signUpResponse);
