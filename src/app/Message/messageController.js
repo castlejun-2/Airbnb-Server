@@ -18,7 +18,7 @@ const { Console } = require("winston/lib/winston/transports");
     const userIdFromJWT = req.verifiedToken.userId;
 
     const alarmResult = await messageProvider.retrieveAlarm(userIdFromJWT);
-    return res.send(alarmResult,baseResponse.SUCCESS);
+    return res.send(alarmResult);
 }
 
 /**

@@ -16,5 +16,4 @@ module.exports = function(app){
 
     // 25. 이전 예약 숙소 세부정보 확인 API
     app.get('/app/last-reservation/:reservationid', jwtMiddleware, reservation.lastReservation);
-
 };

@@ -6,9 +6,14 @@ const messageDao = require("./messageDao");
 const { Console } = require("winston/lib/winston/transports");
 
 exports.retrieveAlarm = async function (userIdFromJWT) {
-    const connection = await pool.getConnection(async (conn) => conn);
-    const alarmResult = await messageDao.selectUserAlarm(connection, userIdFromJWT);
-    connection.release();
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+        const alarmResult = await messageDao.selectUserAlarm(connection, userIdFromJWT);
+        connection.release();
 
-    return alarmResult;
+        return response(baseResponse.SUCCESS, alarmResult);
+    } catch (err){
+        logger.error(`App - AlarmInfo Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
 };

@@ -15,7 +15,7 @@ module.exports = function(app){
     
     // 17. 회원 탈퇴 API
     app.patch('/app/users/withdrawal', jwtMiddleware, user.deleteUsers);
-
+    /*
     passport.use(
         'kakao-login',
         new KakaoStrategy(
@@ -35,11 +35,12 @@ module.exports = function(app){
             },
         ),
     );
+    
     // 23. 카카오 로그인 API
     app.post('/users/kakao-login', user.kakaoLogin);
     app.get('/kakao', passport.authenticate('kakao-login'));
     app.get('/auth/kakao/callback', passport.authenticate('kakao-login', { failureRedirect: '/auth', successRedirect: '/' }));
-
+    */
     // 24. 회원 프로필 수정 API
     app.patch('/app/users/profile', jwtMiddleware, user.patchUsersProfile);
 };
