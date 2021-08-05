@@ -99,7 +99,7 @@ exports.postSignIn = async function (emailAddress, passwd) {
 //회원 정보 수정
 exports.editUser = async function (userIdFromJWT, lastName, firstName, gender, birthday, emailAddress, phoneNumber) {
     try {
-        console.log('Edit Id:', userId);
+        console.log('Edit Id:', userIdFromJWT);
         const connection = await pool.getConnection(async (conn) => conn);
         const selectUserParams = [lastName, firstName, gender, birthday, emailAddress, phoneNumber, userIdFromJWT];
         const editUserResult = await userDao.updateUserInfo(connection, selectUserParams);
